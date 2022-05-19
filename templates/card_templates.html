@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Make a Card{% endblock %}
+{% block head %}
+{% endblock%}
+{% block body %}
+<div>
+<h1>All Templates</h1>
+<p>Pick a template to get started.</p>
+
+{% for template in templates %}
+<img src="{{ template.url }}" width="100" >
+{% endfor %}
+
+
+{% endblock %}

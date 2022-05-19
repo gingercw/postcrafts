@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Postcrafts{% endblock %}
+{% block head %}
+
+
+
+<script src="https://scaleflex.cloudimg.io/v7/plugins/filerobot-image-editor/latest/filerobot-image-editor.min.js"></script>
+
+
+
+{% endblock%}
+{% block body %}
+
+
+  <h1>Create a New Card</h1> 
+
+  <h2>1. Choose an image.</h2>
+  <p>Search for a place and select a photo.</p>
+  <form id="get_photos">
+  <input type="text" name="location" id="location"/>
+  <button type="submit">Find Photos</button>
+  </form>
+  <div id="photo_choices"></div>
+  
+
+
+  <h2>2. Edit card.</h2>
+  <p>Filter. Crop. Add text. Do you what to need to show others you are living it up.</p>
+  <!-- add image editor File Robot here -->
+  
+  <div id="editor_container"></div>
+
+
+  {% block after_body %}
+  <script type="module" src="/static/file_robot.js"></script>
+  {% endblock %}
+{% endblock %}
