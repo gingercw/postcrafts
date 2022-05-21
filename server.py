@@ -81,6 +81,9 @@ def login():
         user_id = user_info.user_id
         session["user_id"] = user_id
         return redirect(f"/{user_id}")
+    else:
+        flash("Wrong password.")
+        return redirect("/")
         
 @app.route('/photos')
 def get_photos():
@@ -88,7 +91,7 @@ def get_photos():
     place = request.args.get("location")
     headers_dict = {"Authorization": f"Client-ID {CLIENTID}"}
 
-    url = f'https://api.unsplash.com/photos/random?query={place}&orientation=landscape&count=8'
+    url = f'https://api.unsplash.com/photos/random?query={place}&location={place}&orientation=landscape&count=8'
 
     response = requests.get(url, headers=headers_dict)
 
@@ -107,6 +110,20 @@ def publish_card(card_id):
     card.published = True
     db.session.commit()
     return redirect("/templates")
+
+@app.route('/save', methods=["POST"])
+def save_card():
+    """save card as image file to cloud"""
+    title = request.json.get("title")
+    url = request.json.get("card_url")
+    published = False
+    user_id = session.get("user_id")
+    user = crud.get_user_by_id(user_id)
+    card = crud.create_card(title, url, published, user)
+    
+    db.session.add(card)
+    db.session.commit()
+    return redirect(f"/{user_id}")
 
 if __name__ == "__main__":
     # DebugToolbarExtension(app)

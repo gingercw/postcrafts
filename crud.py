@@ -20,11 +20,6 @@ def get_user_by_email(email):
     """return user with the email"""
     return User.query.filter(User.email == email).first()
 
-def get_user_by_card(card_id):
-    """return user with the card id"""
-    return User.query.filter(User.email == email).first()
-    return db.session.query(User).join(Card).filter(Card.user_id == user_id).first()
-
 
 def create_card(title, url, published, user):
     """Create and return a new card."""

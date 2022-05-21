@@ -7,10 +7,31 @@ function chooseImage(evt)
   console.log(selectedImage)
 
 const { TABS, TOOLS } = window.FilerobotImageEditor;
+const handleSave = (editedImageObject, designState) => {
+  console.log('saved', editedImageObject, designState)
+  const cardData = {
+    title: prompt("Give your card a name."),
+    card_url: editedImageObject.imageBase64,
+  };
+
+
+  fetch(`/save`, {
+    method: 'POST',
+    body: JSON.stringify(cardData),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => response.json())
+    .then((responseJson) =>{
+    });
+
+}
 const config = {
   source: selectedImage,
 
-  onSave: (editedImageObject, designState) => console.log('saved', editedImageObject, designState),
+  onSave: handleSave,
+
   annotationsCommon: {
     fill: '#ff0000'
   },
@@ -62,7 +83,7 @@ document.querySelector('#get_photos button').addEventListener('click', (evt) => 
     .then((results) => {
 
       for (const i in results) {
-        const imageUrl = results[i].urls.regular;
+        const imageUrl = results[i].urls.thumb;
         const photoCredit = results[i].user.username;
         const alt_description = results[i].alt_description;
         document
