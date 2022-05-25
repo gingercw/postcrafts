@@ -120,7 +120,7 @@ def save_card():
     title = request.json.get("title")
     raw_image = request.json.get("rawImage")
     upload_result = upload(raw_image)
-    url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=1870, height=1250)   
+    url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=1870, height=1250)
     published = False
     hidden = False
     user_id = session.get("user_id")

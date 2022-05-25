@@ -32,27 +32,26 @@ const config = {
 
   onSave: handleSave,
 
+  defaultSavedImageType: "webp",
+
+  Crop: {
+    minWidth: 14,
+    minHeight: 14,
+    maxWidth: 1870,
+    maxHeight: 1250,
+    ratio: 'original',
+    ratioTitleKey: 'original',
+    noPresets: true,
+    autoResize: true,
+},
+
   annotationsCommon: {
     fill: '#ff0000'
   },
+
   Text: { text: 'Greetings from ...' },
-  Crop: {
-    presetsItems: [
-      {
-        titleKey: 'classicTv',
-        descriptionKey: '4:3',
-        ratio: 4 / 3,
-        // icon: CropClassicTv, // optional, CropClassicTv is a React Function component. Possible (React Function component, string or HTML Element)
-      },
-      {
-        titleKey: 'cinemascope',
-        descriptionKey: '21:9',
-        ratio: 21 / 9,
-        // icon: CropCinemaScope, // optional, CropCinemaScope is a React Function component.  Possible (React Function component, string or HTML Element)
-      },
-    ],
-   
-  },
+  
+  
   tabsIds:
   
   [TABS.ADJUST, TABS.ANNOTATE, TABS.FILTERS, TABS.FINETUNE], // or ['Adjust', 'Annotate', 'Watermark']
@@ -109,29 +108,27 @@ const { TABS, TOOLS } = window.FilerobotImageEditor;
 const config = {
   source: "https://cdn.pixabay.com/photo/2014/04/07/18/44/border-318820_960_720.png",
 
-  onSave: (editedImageObject, designState) => console.log('saved', editedImageObject, designState),
+
+  defaultSavedImageType: "webp",
+
+  Crop: {
+    minWidth: 14,
+    minHeight: 14,
+    maxWidth: 1870,
+    maxHeight: 1250,
+    ratio: 'original',
+    ratioTitleKey: 'original',
+    noPresets: true,
+    autoResize: true,
+},
+
   annotationsCommon: {
     fill: '#ff0000'
   },
+
   Text: { text: 'Greetings from ...' },
-  Crop: {
-    presetsItems: [
-      
-      {
-        titleKey: 'classicTv',
-        descriptionKey: '4:3',
-        ratio: 4 / 3,
-        // icon: CropClassicTv, // optional, CropClassicTv is a React Function component. Possible (React Function component, string or HTML Element)
-      },
-      {
-        titleKey: 'cinemascope',
-        descriptionKey: '21:9',
-        ratio: 21 / 9,
-        // icon: CropCinemaScope, // optional, CropCinemaScope is a React Function component.  Possible (React Function component, string or HTML Element)
-      },
-    ],
-   
-  },
+  
+  
   tabsIds:
   
   [TABS.ADJUST, TABS.ANNOTATE, TABS.FILTERS, TABS.FINETUNE], // or ['Adjust', 'Annotate', 'Watermark']
