@@ -1,54 +1,43 @@
 {% extends 'base.html' %}
-{% block title %}Make a Card{% endblock %}
+{% block title %}Postcrafts{% endblock %}
 {% block head %}
 {% endblock%}
 {% block body %}
 <div>
+<form action="/logout" >
+  <button>Log out</button>
+</form>
+
 <h1>Your Profile</h1>
-<p>The world is your oyster. Share its pearls with friends and family. Get started by creating a brand new card or pick from one of our templates.</p>
+<p>Get started by creating a brand new card or pick from one of our templates.</p>
 
 <ul>
-<li><a href="/new_card">Create new card</a></li>
-<li><a href="/card_templates">Browse templates</a></li>
+<li><a href="/{{user.user_id}}/new_card">Create new card</a></li>
+<li><a href="/templates">Browse templates</a></li>
 </ul>
 </div>
 <div>
 <h2>Your Cards</h2>
 
 {% for card in cards %}
-<form action="/publish/{{card.card_id}}" method="POST">
+<div>
 <img src="{{ card.url }}" width="100" >
-<button name="publish" id="publish">Publish as Template</button>
-</form>
+<form action="/publish/{{card.card_id}}" method="POST"><button name="publish" id="publish">Publish as Template</button></form>
+<a href="/sendcard/{{card.card_id}}">Send Card</a>
+<form action="/hidecard/{{card.card_id}}" method="POST"><button name="hide_card" id="hide_card">Delete</button></form>
+</div>
 {% endfor %}
 </div>
 <div>
 <h2>Outbox</h2>
-<ul>
-{% for sent_card in sent_cards %}
-  <li>{{ sent_card.message }}</li>
-{% endfor %}  
-</ul>
+
+<a href="/outbox/{{user.user_id}}">See all your sent cards</a>
 
 </div>
-<div>
-<h2>Return Address</h2>
-<p>{{user.name}}</p>
-<p>{{user.street_address}}</p>
-<p>{{user.city}}, {{user.state}} {{user.zipcode}}</p>
-<button id="update_address">Update</button>
-</div>
+
 <div>
 <h2>Address Book</h2>
-<button id="update_address">Add or Edit</button>
-
-  {% for address in addresses %}
-    <div>
-    <p>{{ address.recipient }}</p>
-    <p>{{ address.street_address }}</p>
-    <p>{{ address.city }}, {{address.state}} {{address.zipcode}}</p>
-    </div>
-  {% endfor %}  
+<a href="/addressbook/{{user.user_id}}">Go to your Address Book</a>
 
 </div>
 

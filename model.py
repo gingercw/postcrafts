@@ -15,11 +15,7 @@ class User(db.Model):
                         primary_key=True,)
     email = db.Column(db.String, unique = True,)
     password = db.Column(db.String)
-    name = db.Column(db.String, nullable = True)
-    street_address = db.Column(db.String, nullable = True)
-    city = db.Column(db.String, nullable = True)
-    state = db.Column(db.String, nullable = True)
-    zipcode = db.Column(db.Integer, nullable = True)
+    
     def __repr__(self):
         return f'<User user_id={self.user_id} email={self.email}>'
 
@@ -36,6 +32,7 @@ class Card(db.Model):
     # location = db.Column(db.String) #the place a postcard represents e.g. New York, San Franciso, etc.
     url = db.Column(db.String)
     published = db.Column(db.Boolean, default=False)
+    hidden = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
 
     user = db.relationship("User", backref="cards")
@@ -58,6 +55,7 @@ class Address(db.Model):
     city = db.Column(db.String)
     state = db.Column(db.String)
     zipcode = db.Column(db.Integer)
+    hidden = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     
     user = db.relationship("User", backref="addresses")
@@ -80,6 +78,18 @@ class SentCard(db.Model):
     
     card = db.relationship("Card", backref="sent_cards")
     address = db.relationship("Address", backref="sent_cards")
+
+    def get_url(self):
+        """find card object using card_id from sent card"""
+        
+        return db.session.query(Card).join(SentCard).filter(self.card_id == Card.card_id).first().url
+
+    def get_recipient(self):
+        """find card object using card_id from sent card"""
+        if db.session.query(Address).join(SentCard).filter(self.address_id == Address.address_id).first():
+            return db.session.query(Address).join(SentCard).filter(self.address_id == Address.address_id).first().recipient
+        else:
+            return "Recipient has been deleted."
 
     def __repr__(self):
         return f'<SentCard sentcard_id={self.sentcard_id} date_sent={self.date_sent}>'

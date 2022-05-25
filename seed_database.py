@@ -18,13 +18,8 @@ model.db.create_all()
 for n in range(10):
     email = f'user{n}@test.com'  # Voila! A unique email!
     password = 'test'
-    name = f'user{n}'
-    street_address = f'{n} Test St.'
-    city = 'San Jose'
-    state = 'CA'
-    zipcode = 12345
 
-    db_user = crud.create_user(email, password, name, street_address, city, state, zipcode)
+    db_user = crud.create_user(email, password)
     model.db.session.add(db_user)
 
     # TODO: create 10 ratings for the user
@@ -36,16 +31,18 @@ for n in range(10):
       city = 'New York City'
       state = 'NY'
       zipcode = 12345
+      hidden = False
 
-      db_address = crud.create_address(recipient, street_address, city, state, zipcode, db_user)
+      db_address = crud.create_address(recipient, street_address, city, state, zipcode, hidden, db_user)
       model.db.session.add(db_address)
 
     for x in range(10):
       title = f'card{x}'
       url = "https://picsum.photos/300/200"
       published = False
+      hidden = False
 
-      db_card = crud.create_card(title, url, published, db_user)
+      db_card = crud.create_card(title, url, published, hidden, db_user)
       model.db.session.add(db_card)
 
       for y in range (5):

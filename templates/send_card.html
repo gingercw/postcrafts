@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Postcrafts{% endblock %}
+{% block head %}
+{% endblock%}
+{% block body %}
+
+<h1>Send Your Card</h1>
+<img src="{{ card.url }}" width="100" >
+<form action="/add_sentcard/{{card.card_id}}" method="POST">
+<label for="message"><h2>1. Add a Message</h2></label>
+<p>Write a message for your card. (280 character limit)</p>
+<textarea name="message" rows="8" cols="45" maxlength="280"></textarea>
+
+<label for="address"><h2>2. Pick a Recipient</h2></label>
+<select name="address">
+  {% for address in addresses %}
+    <option value="{{address.address_id}}">{{ address.recipient }}</p>
+  {% endfor %}  
+</select>
+<button type="submit">Ship it!</button> 
+</form>
+
+{% endblock %}

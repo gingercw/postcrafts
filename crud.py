@@ -5,10 +5,10 @@ from model import db, User, Card, Address, SentCard, connect_to_db
 
 # Functions start here!
 
-def create_user(email, password, name, street_address, city, state, zipcode):
+def create_user(email, password):
     """Create and return a new user."""
 
-    user = User(email=email, password=password, name=name, street_address=street_address, city=city, state=state, zipcode=zipcode)
+    user = User(email=email, password=password)
 
     return user
 
@@ -21,10 +21,10 @@ def get_user_by_email(email):
     return User.query.filter(User.email == email).first()
 
 
-def create_card(title, url, published, user):
+def create_card(title, url, published, hidden, user):
     """Create and return a new card."""
 
-    card = Card(title=title, url=url, published=published, user=user)
+    card = Card(title=title, url=url, published=published, hidden=hidden, user=user)
 
     return card
 
@@ -34,22 +34,26 @@ def get_card_by_id(card_id):
 
 def get_cards_by_user(user_id):
     """returns all cards from a user"""
-    return Card.query.filter_by(user_id = user_id).all()
+    return Card.query.filter_by(user_id = user_id, hidden = False).all()
 
 def get_published_templates():
     """shows all cards that were published"""
     return Card.query.filter_by(published = True).all()
 
-def create_address(recipient, street_address, city, state, zipcode, user):
+def create_address(recipient, street_address, city, state, zipcode, hidden, user):
     """Create and return a new address."""
 
-    address = Address(recipient=recipient, street_address=street_address, city=city, state=state, zipcode=zipcode, user=user)
+    address = Address(recipient=recipient, street_address=street_address, city=city, state=state, zipcode=zipcode, hidden=hidden, user=user)
 
     return address
 
 def get_addresses_by_user(user_id):
     """returns all cards from a user"""
-    return Address.query.filter_by(user_id = user_id).all()
+    return Address.query.filter_by(user_id = user_id, hidden = False).all()
+
+def get_address_by_id(address_id):
+    """returns all cards from a user"""
+    return Address.query.get(address_id)
 
 def create_sentcard(message, date_sent, card, address):
     """Create and return a new address."""
@@ -58,9 +62,11 @@ def create_sentcard(message, date_sent, card, address):
 
     return sentcard
 
+
 def get_sent_cards_by_user(user_id):
-    """returns all cards from a user"""
-    return db.session.query(SentCard).join(Card).filter(Card.user_id == user_id).all()
+    """returns all sent cards from a user"""
+    return db.session.query(SentCard).join(Card).filter(Card.user_id == user_id).order_by(SentCard.date_sent.desc())
+    
 
 if __name__ == '__main__':
     from server import app

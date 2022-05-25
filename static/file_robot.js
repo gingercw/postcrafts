@@ -22,9 +22,9 @@ const handleSave = (editedImageObject, designState) => {
       'Content-Type': 'application/json',
     },
   })
-    .then((response) => response.json())
-    .then((responseJson) =>{
-    });
+    .then((response) => response.text())
+    .then((responseText) => window.location.href = '.');
+
 
 }
 const config = {
@@ -78,7 +78,7 @@ filerobotImageEditor.render({
 document.querySelector('#get_photos button').addEventListener('click', (evt) => {
   const place = document.querySelector('#location').value;
   evt.preventDefault();
-  fetch(`/photos?location=${place}`)
+  fetch(`/photos?location=${place}`) 
     .then((response) => response.json())
     .then((results) => {
 
@@ -116,6 +116,7 @@ const config = {
   Text: { text: 'Greetings from ...' },
   Crop: {
     presetsItems: [
+      
       {
         titleKey: 'classicTv',
         descriptionKey: '4:3',
