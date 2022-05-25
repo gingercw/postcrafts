@@ -4,26 +4,26 @@
 function chooseImage(evt)
 {
   const selectedImage = evt.target.src;
-  console.log(selectedImage)
-
-const { TABS, TOOLS } = window.FilerobotImageEditor;
-const handleSave = (editedImageObject, designState) => {
+  
+  const { TABS, TOOLS } = window.FilerobotImageEditor;
+  const handleSave = (editedImageObject, designState) => {
   console.log('saved', editedImageObject, designState)
   const cardData = {
     title: prompt("Give your card a name."),
-    card_url: editedImageObject.imageBase64,
+    rawImage: editedImageObject.imageBase64,
   };
 
 
   fetch(`/save`, {
     method: 'POST',
     body: JSON.stringify(cardData),
+
     headers: {
       'Content-Type': 'application/json',
     },
   })
     .then((response) => response.text())
-    .then((responseText) => window.location.href = '.');
+    .then((responseText) => window.location.href = './');
 
 
 }

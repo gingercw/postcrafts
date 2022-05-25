@@ -2,6 +2,9 @@
 
 from flask import (Flask, render_template, request, flash, session, redirect, jsonify, Markup)
 
+from cloudinary.uploader import upload
+from cloudinary.utils import cloudinary_url
+
 from model import connect_to_db, db
 
 from datetime import datetime
@@ -14,11 +17,14 @@ import os
 
 import requests
 
+
+
 app = Flask(__name__)
 app.secret_key = "APIKEY"
 app.jinja_env.undefined = StrictUndefined
 
 CLIENTID = os.environ['CLIENTID']
+CLOUDINARY_URL = os.environ['CLOUDINARY_URL']
 
 @app.route('/')
 def index():
@@ -76,7 +82,10 @@ def login():
 
     user = crud.get_user_by_email(input_email)
 
-    if input_password == user.password:
+    if not user:
+        flash("No such email address.")
+        return redirect('/')
+    elif input_password == user.password:
         user_id = user.user_id
         session["user_id"] = user_id
         return redirect(f"/{user_id}")
@@ -97,17 +106,21 @@ def get_photos():
     place = request.args.get("location")
     headers_dict = {"Authorization": f"Client-ID {CLIENTID}"}
 
-    url = f'https://api.unsplash.com/photos/random?query={place}&location={place}&orientation=landscape&count=8'
+    url = f'https://api.unsplash.com/photos/random?query={place}&orientation=landscape&count=8'
 
     response = requests.get(url, headers=headers_dict)
 
     return response.text
 
+
+
 @app.route('/save', methods=["POST"])
 def save_card():
     """save card to database"""
     title = request.json.get("title")
-    url = request.json.get("card_url")
+    raw_image = request.json.get("rawImage")
+    upload_result = upload(raw_image)
+    url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=1870, height=1250)   
     published = False
     hidden = False
     user_id = session.get("user_id")
