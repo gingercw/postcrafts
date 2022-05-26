@@ -27,14 +27,15 @@ for n in range(10):
 
     for x in range(5):
       recipient=f'recipient{x}'
+      phone_number = "2345678123"
       street_address = f'{n} Test St.'
       city = 'New York City'
       state = 'NY'
       zipcode = 12345
       hidden = False
 
-      db_address = crud.create_address(recipient, street_address, city, state, zipcode, hidden, db_user)
-      model.db.session.add(db_address)
+      db_contact = crud.create_contact(recipient, phone_number, street_address, city, state, zipcode, hidden, db_user)
+      model.db.session.add(db_contact)
 
     for x in range(10):
       title = f'card{x}'
@@ -49,7 +50,7 @@ for n in range(10):
         message = f'Hi person{y}--check out where I went!'
         date_sent = f"2022-5-{y + 1}"
         
-        db_sentcard = crud.create_sentcard(message, date_sent, db_card, db_address)
+        db_sentcard = crud.create_sentcard(message, date_sent, db_card, db_contact)
         model.db.session.add(db_sentcard)
 
 

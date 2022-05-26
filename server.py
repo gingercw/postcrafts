@@ -5,6 +5,8 @@ from flask import (Flask, render_template, request, flash, session, redirect, js
 from cloudinary.uploader import upload
 from cloudinary.utils import cloudinary_url
 
+from twilio.rest import Client
+
 from model import connect_to_db, db
 
 from datetime import datetime
@@ -25,6 +27,10 @@ app.jinja_env.undefined = StrictUndefined
 
 CLIENTID = os.environ['CLIENTID']
 CLOUDINARY_URL = os.environ['CLOUDINARY_URL']
+
+account_sid = os.environ['TWILIO_SID']
+auth_token = os.environ['TWILIO_AUTH']
+client = Client(account_sid, auth_token)
 
 @app.route('/')
 def index():
@@ -50,10 +56,10 @@ def get_user_details(user_id):
     user_details = crud.get_user_by_id(user_id)
     users_cards = crud.get_cards_by_user(user_id)
     cards_sent = crud.get_sent_cards_by_user(user_id)
-    addresses = crud.get_addresses_by_user(user_id)
+    contacts = crud.get_contacts_by_user(user_id)
 
 
-    return render_template("user_profile.html", user = user_details, cards = users_cards, sent_cards = cards_sent, addresses = addresses)
+    return render_template("user_profile.html", user = user_details, cards = users_cards, sent_cards = cards_sent, contacts = contacts)
 
 
 @app.route('/users', methods=["POST"])
@@ -70,8 +76,8 @@ def register_user():
         db.session.commit()
         flash("Whoo hoo! Log in to start creating.")
     else:
-        flash("An account already exists with that email address. Try logging in.")
-        return redirect("/")
+        flash("An account already exists with that email. Try logging in.")
+    return redirect("/")
     
 
 @app.route("/login", methods=["POST"])
@@ -83,14 +89,14 @@ def login():
     user = crud.get_user_by_email(input_email)
 
     if not user:
-        flash("No such email address.")
+        flash("No account exists with that email")
         return redirect('/')
     elif input_password == user.password:
         user_id = user.user_id
         session["user_id"] = user_id
         return redirect(f"/{user_id}")
     else:
-        flash("Wrong password.")
+        flash("Wrong password")
         return redirect("/")
 
 @app.route("/logout")
@@ -120,7 +126,7 @@ def save_card():
     title = request.json.get("title")
     raw_image = request.json.get("rawImage")
     upload_result = upload(raw_image)
-    url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=1870, height=1250)
+    url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=300, height=200)
     published = False
     hidden = False
     user_id = session.get("user_id")
@@ -171,34 +177,35 @@ def sendcard(card_id):
     """go to sendcard page"""
     card = crud.get_card_by_id(card_id)
     user_id = card.user_id
-    addresses = crud.get_addresses_by_user(user_id)
+    contacts = crud.get_contacts_by_user(user_id)
 
-    return render_template("send_card.html", card = card, addresses = addresses)
+    return render_template("send_card.html", card = card, contacts = contacts)
 
 @app.route('/addressbook/<user_id>')
 def show_addresses(user_id):
     """go to sendcard page"""
 
-    addresses = crud.get_addresses_by_user(user_id)
+    contacts = crud.get_contacts_by_user(user_id)
     user = crud.get_user_by_id(user_id)
 
 
-    return render_template("address_book.html", user=user, addresses = addresses)
+    return render_template("address_book.html", user=user, contacts = contacts)
 
-@app.route("/addaddress", methods=["POST"])
-def add_address():
-    """add address to the user's address book"""
+@app.route("/addcontact", methods=["POST"])
+def add_contact():
+    """add contact to the user's address book"""
     user_id = session.get("user_id")
     user = crud.get_user_by_id(user_id)
     recipient = request.form.get("name")
+    phone_number = request.form.get("phone_number")
     street_address = request.form.get("street_address")
     city = request.form.get("city")
     state = request.form.get("state")
     zipcode = request.form.get("zipcode")
     hidden = False
 
-    address = crud.create_address(recipient, street_address, city, state, zipcode, hidden, user)
-    db.session.add(address)
+    contact = crud.create_contact(recipient, str(phone_number), street_address, city, state, zipcode, hidden, user)
+    db.session.add(contact)
     db.session.commit()
     return redirect(f"/addressbook/{user_id}")
 
@@ -208,12 +215,19 @@ def add_sentcard(card_id):
     user_id = session.get("user_id")
     message = request.form.get("message")
     card = crud.get_card_by_id(card_id)
-    address_id = request.form.get("address")
-    address = crud.get_address_by_id(address_id)
+    contact_id = request.form.get("contact")
+    contact = crud.get_contact_by_id(contact_id)
     today = datetime.today()
     date_sent = today.strftime("%Y-%m-%d %H:%M:%S")
 
-    sentcard = crud.create_sentcard(message, date_sent, card, address)
+    sms = client.messages.create(
+                              body= message,
+                              from_='+12056277820',
+                              media_url=[card.url],
+                              to='+1'+ contact.phone_number
+                          )
+
+    sentcard = crud.create_sentcard(message, date_sent, card, contact)
     db.session.add(sentcard)
     db.session.commit()
     return redirect(f"/{user_id}")
@@ -225,9 +239,9 @@ def show_sentcards(user_id):
     user = crud.get_user_by_id(user_id)
     cards_sent = crud.get_sent_cards_by_user(user_id)
     cards = crud.get_cards_by_user(user_id)
-    addresses = crud.get_addresses_by_user(user_id)
+    contacts = crud.get_contacts_by_user(user_id)
     
-    return render_template("outbox.html", sent_cards = cards_sent, cards = cards, user=user, addresses=addresses)
+    return render_template("outbox.html", sent_cards = cards_sent, cards = cards, user=user, contacts=contacts)
 
 @app.route("/hidecard/<card_id>", methods=["POST"])
 def hide_card(card_id):
@@ -239,11 +253,11 @@ def hide_card(card_id):
 
     return redirect(f"/{user_id}")
 
-@app.route("/hideaddress/<address_id>", methods=["POST"])
-def hide_address(address_id):
-    "hide address from user"
-    address = crud.get_address_by_id(address_id)
-    address.hidden = True
+@app.route("/hidecontact/<contact_id>", methods=["POST"])
+def hide_contact(contact_id):
+    "hide contact from user"
+    contact = crud.get_contact_by_id(contact_id)
+    contact.hidden = True
     db.session.commit()
     user_id = session.get("user_id")
 

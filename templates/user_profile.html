@@ -21,6 +21,7 @@
 
 {% for card in cards %}
 <div>
+<p><b>{{card.title}}</b></p>
 <img src="{{ card.url }}" width="100" >
 <form action="/publish/{{card.card_id}}" method="POST"><button name="publish" id="publish">Publish as Template</button></form>
 <a href="/sendcard/{{card.card_id}}">Send Card</a>

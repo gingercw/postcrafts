@@ -11,10 +11,10 @@
 <p>Write a message for your card. (280 character limit)</p>
 <textarea name="message" rows="8" cols="45" maxlength="280"></textarea>
 
-<label for="address"><h2>2. Pick a Recipient</h2></label>
-<select name="address">
-  {% for address in addresses %}
-    <option value="{{address.address_id}}">{{ address.recipient }}</p>
+<label for="contat"><h2>2. Pick a Recipient</h2></label>
+<select name="contact">
+  {% for contact in contacts %}
+    <option value="{{contact.contact_id}}">{{ contact.recipient }}</p>
   {% endfor %}  
 </select>
 <button type="submit">Ship it!</button> 

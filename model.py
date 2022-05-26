@@ -42,29 +42,30 @@ class Card(db.Model):
         return f'<Card card_id={self.card_id} title={self.title}>'
 
 
-class Address(db.Model):
-    """Address the user sends cards to."""
+class Contact(db.Model):
+    """Contacts the user sends cards to."""
 
-    __tablename__ = 'addresses'
+    __tablename__ = 'contacts'
 
-    address_id = db.Column(db.Integer,
+    contact_id = db.Column(db.Integer,
                         autoincrement=True,
                         primary_key=True,)
     recipient = db.Column(db.String)
-    street_address = db.Column(db.String)
-    city = db.Column(db.String)
-    state = db.Column(db.String)
-    zipcode = db.Column(db.Integer)
+    phone_number = db.Column(db.String, nullable=True)
+    street_address = db.Column(db.String, nullable=True)
+    city = db.Column(db.String, nullable=True)
+    state = db.Column(db.String, nullable=True)
+    zipcode = db.Column(db.Integer, nullable=True)
     hidden = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     
-    user = db.relationship("User", backref="addresses")
+    user = db.relationship("User", backref="contacts")
 
     def __repr__(self):
-        return f'<Address address_id={self.address_id} recipient={self.recipient}>'
+        return f'<Contact contact_id={self.contact_id} contact={self.recipient}>'
 
 class SentCard(db.Model):
-    """Address the user sends cards to."""
+    """Record cards that have been sent."""
 
     __tablename__ = 'sent_cards'
 
@@ -74,10 +75,10 @@ class SentCard(db.Model):
     message = db.Column(db.Text)
     date_sent = db.Column(db.DateTime)
     card_id = db.Column(db.Integer, db.ForeignKey("cards.card_id"))
-    address_id = db.Column(db.Integer, db.ForeignKey("addresses.address_id"))
+    contact_id = db.Column(db.Integer, db.ForeignKey("contacts.contact_id"))
     
     card = db.relationship("Card", backref="sent_cards")
-    address = db.relationship("Address", backref="sent_cards")
+    contact = db.relationship("Contact", backref="sent_cards")
 
     def get_url(self):
         """find card object using card_id from sent card"""
@@ -86,10 +87,10 @@ class SentCard(db.Model):
 
     def get_recipient(self):
         """find card object using card_id from sent card"""
-        if db.session.query(Address).join(SentCard).filter(self.address_id == Address.address_id).first():
-            return db.session.query(Address).join(SentCard).filter(self.address_id == Address.address_id).first().recipient
+        if db.session.query(Contact).join(SentCard).filter(self.contact_id == Contact.contact_id).first():
+            return db.session.query(Contact).join(SentCard).filter(self.contact_id == Contact.contact_id).first().recipient
         else:
-            return "Recipient has been deleted."
+            return "Contact has been deleted."
 
     def __repr__(self):
         return f'<SentCard sentcard_id={self.sentcard_id} date_sent={self.date_sent}>'

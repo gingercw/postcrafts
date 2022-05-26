@@ -6,9 +6,11 @@
 
 <h1>Address Book</h1>
 <a href="/{{user.user_id}}">Go back to your profile</a>
-<p>Add family and friends to your address book.</p>
-  <form action="/addaddress" method="POST">
+<p>Add family and friends to your contacts.</p>
+  <form action="/addcontact" method="POST">
   <label for="name">Name:</label><input type="text" name="name"/>
+  <label for="phone_number">Phone number:</label>
+<input type="tel" id="phone_number" name="phone_number"/>
   <label for="street_address">Street address:</label><input type="text" name="street_address"/>
   <label for="city">City:</label><input type="text" name="city"/>
   <label for="state">State:</label><select name="state">
@@ -66,14 +68,15 @@
   </select>	
   <label for="zipcode">5-digit zipcode:</label><input type="number" maxlength="5" name="zipcode"/>
 
-  <button id="add_address">Add Address</button>
+  <button id="add_contact">Add Contact</button>
   </form>
-  {% for address in addresses %}
-    <form action="/hideaddress/{{address.address_id}}" method="POST">
-    <p><b>{{ address.recipient }}</b></p>
-    <p>{{ address.street_address }}</p>
-    <p>{{ address.city }}, {{address.state}} {{address.zipcode}}</p>
-    <button name="delete_address">Delete Address</button>
+  {% for contact in contacts %}
+    <form action="/hidecontact/{{contact.contact_id}}" method="POST">
+    <p><b>{{ contact.recipient }}</b></p>
+    <p>{{contact.phone_number}}</p>
+    <p>{{ contact.street_address }}</p>
+    <p>{{ contact.city }}, {{contact.state}} {{contact.zipcode}}</p>
+    <button name="hide_contact">Delete Contact</button>
     </form>
   {% endfor %} 
 

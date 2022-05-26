@@ -1,6 +1,6 @@
 """CRUD operations."""
 
-from model import db, User, Card, Address, SentCard, connect_to_db
+from model import db, User, Card, Contact, SentCard, connect_to_db
 
 
 # Functions start here!
@@ -40,25 +40,25 @@ def get_published_templates():
     """shows all cards that were published"""
     return Card.query.filter_by(published = True).all()
 
-def create_address(recipient, street_address, city, state, zipcode, hidden, user):
-    """Create and return a new address."""
+def create_contact(recipient, phone_number, street_address, city, state, zipcode, hidden, user):
+    """Create and return a new contact."""
 
-    address = Address(recipient=recipient, street_address=street_address, city=city, state=state, zipcode=zipcode, hidden=hidden, user=user)
+    contact = Contact(recipient=recipient, phone_number=phone_number, street_address=street_address, city=city, state=state, zipcode=zipcode, hidden=hidden, user=user)
 
-    return address
+    return contact
 
-def get_addresses_by_user(user_id):
+def get_contacts_by_user(user_id):
     """returns all cards from a user"""
-    return Address.query.filter_by(user_id = user_id, hidden = False).all()
+    return Contact.query.filter_by(user_id = user_id, hidden = False).all()
 
-def get_address_by_id(address_id):
+def get_contact_by_id(contact_id):
     """returns all cards from a user"""
-    return Address.query.get(address_id)
+    return Contact.query.get(contact_id)
 
-def create_sentcard(message, date_sent, card, address):
-    """Create and return a new address."""
+def create_sentcard(message, date_sent, card, contact):
+    """Record card that was sent."""
 
-    sentcard = SentCard(message=message, date_sent=date_sent, card=card, address=address)
+    sentcard = SentCard(message=message, date_sent=date_sent, card=card, contact=contact)
 
     return sentcard
 
