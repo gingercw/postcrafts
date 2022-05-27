@@ -5,6 +5,7 @@
 {% block body %}
 
 <h1>Send Your Card</h1>
+
 <img src="{{ card.url }}" width="100" >
 <form action="/add_sentcard/{{card.card_id}}" method="POST">
 <label for="message"><h2>1. Add a Message</h2></label>

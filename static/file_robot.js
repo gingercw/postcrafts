@@ -34,17 +34,6 @@ const config = {
 
   defaultSavedImageType: "webp",
 
-  Crop: {
-    minWidth: 14,
-    minHeight: 14,
-    maxWidth: 1870,
-    maxHeight: 1250,
-    ratio: 'original',
-    ratioTitleKey: 'original',
-    noPresets: true,
-    autoResize: true,
-},
-
   annotationsCommon: {
     fill: '#ff0000'
   },
@@ -82,7 +71,7 @@ document.querySelector('#get_photos button').addEventListener('click', (evt) => 
     .then((results) => {
 
       for (const i in results) {
-        const imageUrl = results[i].urls.thumb;
+        const imageUrl = results[i].urls.raw + "?q=85fm=jpg&w=1000&fit=max";
         const photoCredit = results[i].user.username;
         const alt_description = results[i].alt_description;
         document
@@ -111,16 +100,6 @@ const config = {
 
   defaultSavedImageType: "webp",
 
-  Crop: {
-    minWidth: 14,
-    minHeight: 14,
-    maxWidth: 1870,
-    maxHeight: 1250,
-    ratio: 'original',
-    ratioTitleKey: 'original',
-    noPresets: true,
-    autoResize: true,
-},
 
   annotationsCommon: {
     fill: '#ff0000'
