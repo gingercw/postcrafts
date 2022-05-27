@@ -41,6 +41,7 @@ def index():
     else:
         return render_template("homepage.html")
 
+
 @app.route('/<user_id>/new_card')
 def make_card(user_id):
     """create a new card"""
@@ -109,10 +110,10 @@ def logout():
 @app.route('/photos')
 def get_photos():
     """View the details of an event."""
-    place = request.args.get("location")
+    photo_query = request.args.get("photo_query")
     headers_dict = {"Authorization": f"Client-ID {CLIENTID}"}
 
-    url = f'https://api.unsplash.com/photos/random?query={place}&orientation=landscape&count=8'
+    url = f'https://api.unsplash.com/photos/random?query={photo_query}&orientation=landscape&count=8'
 
     response = requests.get(url, headers=headers_dict)
 
@@ -263,6 +264,12 @@ def hide_contact(contact_id):
 
     return redirect(f"/addressbook/{user_id}")
 
+
+
+@app.route('/images')
+def test():
+    """go to homepage if a user is not already logged in"""
+    return render_template("image_selector.html")
 
 if __name__ == "__main__":
     # DebugToolbarExtension(app)

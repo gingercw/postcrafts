@@ -63,10 +63,12 @@ filerobotImageEditor.render({
 };
 
 
-document.querySelector('#get_photos button').addEventListener('click', (evt) => {
-  const place = document.querySelector('#location').value;
-  evt.preventDefault();
-  fetch(`/photos?location=${place}`) 
+document.querySelector('#findPhotos').addEventListener('click', (evt) => {
+  const photoQuery = document.querySelector('#photoQuery').value;
+  
+  document.querySelector('#photo_choices').innerHTML = "";
+  
+  fetch(`/photos?photo_query=${photoQuery}`) 
     .then((response) => response.json())
     .then((results) => {
 
@@ -74,11 +76,13 @@ document.querySelector('#get_photos button').addEventListener('click', (evt) => 
         const imageUrl = results[i].urls.raw + "?q=85fm=jpg&w=1000&fit=max";
         const photoCredit = results[i].user.username;
         const alt_description = results[i].alt_description;
-        document
-        .querySelector('#photo_choices')
+        document.querySelector('#photo_choices')
         .insertAdjacentHTML('beforeend', `<div><img width="100" class="choice" alt="${alt_description}" src=${imageUrl}">
         <p>Credit: ${photoCredit}</p></div>`);
       }
+
+      
+
       const images = document.querySelectorAll(".choice")
       console.log(images)
       for (const image of images) {

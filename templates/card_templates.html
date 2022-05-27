@@ -10,7 +10,7 @@
 {% for template in templates %}
 <form action="/savetemplate/{{template.card_id}}" method="POST">
 <h3>{{template.title}}</h3>
-<img src="{{ template.url }}" width="100" >
+<img src="{{ template.url }}" width="300" >
 <button name="save_template">Add to Your Cards</button>
 </form>
 {% endfor %}
