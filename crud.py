@@ -21,10 +21,10 @@ def get_user_by_email(email):
     return User.query.filter(User.email == email).first()
 
 
-def create_card(title, url, published, hidden, user):
+def create_card(title, url, published, tags, hidden, user):
     """Create and return a new card."""
 
-    card = Card(title=title, url=url, published=published, hidden=hidden, user=user)
+    card = Card(title=title, url=url, published=published, tags=tags, hidden=hidden, user=user)
 
     return card
 
@@ -40,10 +40,10 @@ def get_published_templates():
     """shows all cards that were published"""
     return Card.query.filter_by(published = True).all()
 
-def create_contact(recipient, phone_number, street_address, city, state, zipcode, hidden, user):
+def create_contact(recipient, phone_number, email, hidden, user):
     """Create and return a new contact."""
 
-    contact = Contact(recipient=recipient, phone_number=phone_number, street_address=street_address, city=city, state=state, zipcode=zipcode, hidden=hidden, user=user)
+    contact = Contact(recipient=recipient, phone_number=phone_number, email=email, hidden=hidden, user=user)
 
     return contact
 

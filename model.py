@@ -29,13 +29,21 @@ class Card(db.Model):
                         autoincrement=True,
                         primary_key=True,)
     title = db.Column(db.String)
-    # location = db.Column(db.String) #the place a postcard represents e.g. New York, San Franciso, etc.
     url = db.Column(db.String)
     published = db.Column(db.Boolean, default=False)
+    tags = db.Column(db.String, nullable=True)
     hidden = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
 
     user = db.relationship("User", backref="cards")
+
+    def to_dict(self):
+        """get dictionary of cards"""
+        return {'card_id': self.card_id,
+                'title': self.title,
+                'url': self.url,
+                'user_id': self.user_id}
+
 
 
     def __repr__(self):
@@ -52,10 +60,7 @@ class Contact(db.Model):
                         primary_key=True,)
     recipient = db.Column(db.String)
     phone_number = db.Column(db.String, nullable=True)
-    street_address = db.Column(db.String, nullable=True)
-    city = db.Column(db.String, nullable=True)
-    state = db.Column(db.String, nullable=True)
-    zipcode = db.Column(db.Integer, nullable=True)
+    email = db.Column(db.String, nullable=True)
     hidden = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     

@@ -13,6 +13,15 @@ from datetime import datetime
 
 import crud 
 
+from sendgrid import SendGridAPIClient
+
+from sendgrid.helpers.mail import Mail
+# Import smtplib for the actual sending function
+import smtplib, ssl
+
+# Import the email modules we'll need
+from email.message import EmailMessage
+
 from jinja2 import StrictUndefined
 
 import os
@@ -27,6 +36,8 @@ app.jinja_env.undefined = StrictUndefined
 
 CLIENTID = os.environ['CLIENTID']
 CLOUDINARY_URL = os.environ['CLOUDINARY_URL']
+SENDGRID = os.environ['SENDGRID']
+EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 
 account_sid = os.environ['TWILIO_SID']
 auth_token = os.environ['TWILIO_AUTH']
@@ -39,7 +50,7 @@ def index():
         user_id = session.get("user_id")
         return redirect(f"/{user_id}")
     else:
-        return render_template("homepage.html")
+        return render_template("index.html")
 
 
 @app.route('/<user_id>/new_card')
@@ -109,7 +120,7 @@ def logout():
         
 @app.route('/photos')
 def get_photos():
-    """View the details of an event."""
+    """Find 8 photos from Unsplash with query term."""
     photo_query = request.args.get("photo_query")
     headers_dict = {"Authorization": f"Client-ID {CLIENTID}"}
 
@@ -127,12 +138,13 @@ def save_card():
     title = request.json.get("title")
     raw_image = request.json.get("rawImage")
     upload_result = upload(raw_image)
-    url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=300, height=200)
+    url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=600, height=400)
     published = False
+    tags = None
     hidden = False
     user_id = session.get("user_id")
     user = crud.get_user_by_id(user_id)
-    card = crud.create_card(title, url, published, hidden, user)
+    card = crud.create_card(title, url, published, tags, hidden, user)
     
     db.session.add(card)
     db.session.commit()
@@ -144,6 +156,12 @@ def show_templates():
     templates = crud.get_published_templates()
     return render_template ("card_templates.html", templates = templates)
 
+@app.route('/api/templates')
+def get_templates():
+    """Get all published card templates"""
+    templates = crud.get_published_templates()
+    return jsonify({template.title: template.to_dict() for template in templates})
+
 @app.route('/publish/<card_id>', methods=["POST"])
 def publish_card(card_id):
     """publish card as template"""
@@ -151,6 +169,7 @@ def publish_card(card_id):
     card.published = True
     db.session.commit()
     return redirect("/templates")
+
 
 @app.route('/savetemplate/<card_id>', methods=["POST"])
 def save_template_as_card(card_id):
@@ -160,10 +179,11 @@ def save_template_as_card(card_id):
         title = card.title
         url = card.url
         published = False
+        tags = None
         hidden = False
         user_id = session.get("user_id")
         user = crud.get_user_by_id(user_id)
-        card = crud.create_card(title, url, published, hidden, user)
+        card = crud.create_card(title, url, published, tags, hidden, user)
         
         db.session.add(card)
         db.session.commit()
@@ -199,13 +219,10 @@ def add_contact():
     user = crud.get_user_by_id(user_id)
     recipient = request.form.get("name")
     phone_number = request.form.get("phone_number")
-    street_address = request.form.get("street_address")
-    city = request.form.get("city")
-    state = request.form.get("state")
-    zipcode = request.form.get("zipcode")
+    email = request.form.get("email")
     hidden = False
 
-    contact = crud.create_contact(recipient, str(phone_number), street_address, city, state, zipcode, hidden, user)
+    contact = crud.create_contact(recipient, str(phone_number), email, hidden, user)
     db.session.add(contact)
     db.session.commit()
     return redirect(f"/addressbook/{user_id}")
@@ -214,24 +231,76 @@ def add_contact():
 def add_sentcard(card_id):
     """add sent card to database"""
     user_id = session.get("user_id")
+    user = crud.get_user_by_id(user_id)
     message = request.form.get("message")
     card = crud.get_card_by_id(card_id)
     contact_id = request.form.get("contact")
+    medium = request.form.get("medium")
     contact = crud.get_contact_by_id(contact_id)
     today = datetime.today()
     date_sent = today.strftime("%Y-%m-%d %H:%M:%S")
 
-    sms = client.messages.create(
-                              body= message,
-                              from_='+12056277820',
-                              media_url=[card.url],
-                              to='+1'+ contact.phone_number
-                          )
+    if medium == "text":
+        sms = client.messages.create(
+                                body= message,
+                                from_='+12056277820',
+                                media_url=[card.url],
+                                to='+1'+ contact.phone_number
+                            )
+    else:
+        # email_message = Mail(
+        #     from_email='postcraftcards@gmail.com',
+        #     to_emails=contact.email,
+        #     subject='A Card for You!',
+        #     html_content='<strong>and easy to do anywhere, even with Python</strong>')
+        # try:
+        #     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+        #     response = sg.send(email_message)
+        #     print(response.status_code)
+        #     print(response.body)
+        #     print(response.headers)
+        # except Exception as e:
+        #     print(e.email_message)
+
+        msg = EmailMessage()
+        msg['Subject'] = "A Card for You!"
+        msg['From'] = "postcraftcards@gmail.com"
+        msg['To'] = contact.email
+        msg.set_content(message)
+
+        # Send the message via our own SMTP server.
+        with smtplib.SMTP(host='smtp.sendgrid.net', port=587) as s:
+            s.login("apikey", EMAIL_PASSWORD)
+            s.send_message(msg)
+            s.quit()
+
+        # port = 587  # For starttls
+        # smtp_server = "smtp.sendgrid.net"
+        # sender_email = "postcraftcards@gmail.com"
+        # receiver_email = contact.email
+        # email_message = f"""\
+        # From: postcraftcards@gmail.com\nSubject: A Card for You!
+
+        # {message}"""
+
+
+        # context = ssl.create_default_context()
+
+        # with smtplib.SMTP(smtp_server, port) as server:
+        #     server.starttls(context=context)
+        #     print("hello")
+        #     server.login("apikey", EMAIL_PASSWORD)
+        #     print("goodbye")
+        #     server.sendmail(sender_email, receiver_email, email_message)
+        #     print("aloha")
+        
 
     sentcard = crud.create_sentcard(message, date_sent, card, contact)
     db.session.add(sentcard)
     db.session.commit()
     return redirect(f"/{user_id}")
+
+
 
 @app.route('/outbox/<user_id>')
 def show_sentcards(user_id):
@@ -267,7 +336,7 @@ def hide_contact(contact_id):
 
 
 @app.route('/images')
-def test():
+def images():
     """go to homepage if a user is not already logged in"""
     return render_template("image_selector.html")
 

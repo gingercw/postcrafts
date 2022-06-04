@@ -5,13 +5,16 @@
 {% block body %}
 <div>
 <h1>All Templates</h1>
-<p>Pick a template to get started.</p>
+<form >
+  <input type="search" name="template_search" id="templateSearch" placeholder="Find a template..."/>
+  <button name="template_search">Search</button>
+</form>
 
 {% for template in templates %}
 <form action="/savetemplate/{{template.card_id}}" method="POST">
-<h3>{{template.title}}</h3>
-<img src="{{ template.url }}" width="300" >
-<button name="save_template">Add to Your Cards</button>
+  <h3>{{template.title}}</h3>
+  <img src="{{ template.url }}" width="300" />
+  <button name="save_template">Add to Your Cards</button>
 </form>
 {% endfor %}
 

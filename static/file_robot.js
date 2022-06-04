@@ -1,4 +1,6 @@
 
+
+
 // get random photos from Unsplash API
 
 function chooseImage(evt)
@@ -38,7 +40,7 @@ const config = {
     fill: '#ff0000'
   },
 
-  Text: { text: 'Greetings from ...' },
+  Text: { text: 'Add text here...' },
   
   
   tabsIds:
@@ -101,16 +103,13 @@ const { TABS, TOOLS } = window.FilerobotImageEditor;
 const config = {
   source: "https://cdn.pixabay.com/photo/2014/04/07/18/44/border-318820_960_720.png",
 
-
   defaultSavedImageType: "webp",
-
 
   annotationsCommon: {
     fill: '#ff0000'
   },
 
-  Text: { text: 'Greetings from ...' },
-  
+  Text: { text: 'Add text here...' },
   
   tabsIds:
   

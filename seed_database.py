@@ -16,34 +16,29 @@ model.connect_to_db(server.app)
 model.db.create_all()
 
 for n in range(10):
-    email = f'user{n}@test.com'  # Voila! A unique email!
+    email = f'user{n}@test.com' 
     password = 'test'
 
     db_user = crud.create_user(email, password)
     model.db.session.add(db_user)
 
-    # TODO: create 10 ratings for the user
-
-
     for x in range(5):
       recipient=f'recipient{x}'
       phone_number = "2345678123"
-      street_address = f'{n} Test St.'
-      city = 'New York City'
-      state = 'NY'
-      zipcode = 12345
+      email = f'test_email{x}@test.com'
       hidden = False
 
-      db_contact = crud.create_contact(recipient, phone_number, street_address, city, state, zipcode, hidden, db_user)
+      db_contact = crud.create_contact(recipient, phone_number, email, hidden, db_user)
       model.db.session.add(db_contact)
 
     for x in range(10):
       title = f'card{x}'
       url = "https://picsum.photos/300/200"
       published = False
+      tags = None
       hidden = False
 
-      db_card = crud.create_card(title, url, published, hidden, db_user)
+      db_card = crud.create_card(title, url, published, tags, hidden, db_user)
       model.db.session.add(db_card)
 
       for y in range (5):
