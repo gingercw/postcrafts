@@ -13,14 +13,12 @@ from datetime import datetime
 
 import crud 
 
-from sendgrid import SendGridAPIClient
-
-from sendgrid.helpers.mail import Mail
-# Import smtplib for the actual sending function
-import smtplib, ssl
-
-# Import the email modules we'll need
-from email.message import EmailMessage
+import smtplib
+from email import encoders
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email.mime.image import MIMEImage
 
 from jinja2 import StrictUndefined
 
@@ -36,7 +34,6 @@ app.jinja_env.undefined = StrictUndefined
 
 CLIENTID = os.environ['CLIENTID']
 CLOUDINARY_URL = os.environ['CLOUDINARY_URL']
-SENDGRID = os.environ['SENDGRID']
 EMAIL_PASSWORD = os.environ['EMAIL_PASSWORD']
 
 account_sid = os.environ['TWILIO_SID']
@@ -59,6 +56,44 @@ def make_card(user_id):
     user_details = crud.get_user_by_id(user_id)
     
     return render_template("new_card.html", user_details=user_details)
+
+@app.route('/edit_card/<card_id>')
+def edit_card(card_id):
+    """render template for edit card"""
+    card = crud.get_card_by_id(card_id)
+    card_id = card.card_id
+    return render_template("edit_card.html")
+
+@app.route('/edit_card/details/<card_id>')
+def edit_card_details(card_id):
+    """pass card details to edit card page"""
+    card = crud.get_card_by_id(card_id)
+    card_id = card.card_id
+    card_url = card.url
+    user_id = session.get("user_id")
+    return jsonify({
+       "card_id": card_id,
+       "card_url": card_url,
+       "user_id": user_id
+
+    })
+
+
+@app.route('/save_edits', methods=["POST"])
+def save_edits():
+    """update url to card to save changes"""
+    card_id = request.json.get("card_id")
+    print(card_id)
+    card = crud.get_card_by_id(card_id)
+    raw_image = request.json.get("rawImage")
+    upload_result = upload(raw_image)
+    url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=600, height=400)
+    card.url = url
+    print(card.url)
+    user_id = session.get("user_id")
+    print(user_id)
+    db.session.commit()
+    return redirect(f"/{user_id}/")
 
 
 @app.route('/<user_id>')
@@ -129,7 +164,6 @@ def get_photos():
     response = requests.get(url, headers=headers_dict)
 
     return response.text
-
 
 
 @app.route('/save', methods=["POST"])
@@ -247,58 +281,36 @@ def add_sentcard(card_id):
                                 media_url=[card.url],
                                 to='+1'+ contact.phone_number
                             )
-    else:
-        # email_message = Mail(
-        #     from_email='postcraftcards@gmail.com',
-        #     to_emails=contact.email,
-        #     subject='A Card for You!',
-        #     html_content='<strong>and easy to do anywhere, even with Python</strong>')
-        # try:
-        #     sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-        #     response = sg.send(email_message)
-        #     print(response.status_code)
-        #     print(response.body)
-        #     print(response.headers)
-        # except Exception as e:
-        #     print(e.email_message)
+    else:      
 
-        msg = EmailMessage()
-        msg['Subject'] = "A Card for You!"
-        msg['From'] = "postcraftcards@gmail.com"
-        msg['To'] = contact.email
-        msg.set_content(message)
+        sender = "postcraftcards@gmail.com"
+        receiver = contact.email
+        # Create the root message 
 
-        # Send the message via our own SMTP server.
-        with smtplib.SMTP(host='smtp.sendgrid.net', port=587) as s:
-            s.login("apikey", EMAIL_PASSWORD)
-            s.send_message(msg)
-            s.quit()
+        msgRoot = MIMEMultipart('related')
+        msgRoot['Subject'] = f'A Card for {contact.recipient}!'
+        msgRoot['From'] = sender
+        msgRoot['To'] = receiver
 
-        # port = 587  # For starttls
-        # smtp_server = "smtp.sendgrid.net"
-        # sender_email = "postcraftcards@gmail.com"
-        # receiver_email = contact.email
-        # email_message = f"""\
-        # From: postcraftcards@gmail.com\nSubject: A Card for You!
+        msgAlternative = MIMEMultipart('alternative')
+        msgRoot.attach(msgAlternative)
 
-        # {message}"""
+        msgText = MIMEText(message)
+        msgAlternative.attach(msgText)
 
+        msgText = MIMEText(f'{message}<br><img src={card.url}>', 'html')
+        msgAlternative.attach(msgText)
 
-        # context = ssl.create_default_context()
-
-        # with smtplib.SMTP(smtp_server, port) as server:
-        #     server.starttls(context=context)
-        #     print("hello")
-        #     server.login("apikey", EMAIL_PASSWORD)
-        #     print("goodbye")
-        #     server.sendmail(sender_email, receiver_email, email_message)
-        #     print("aloha")
-        
+        smtp = smtplib.SMTP()
+        smtp.connect(host='smtp.sendgrid.net', port=587) #SMTp Server Details
+        smtp.login("apikey", EMAIL_PASSWORD) #Username and Password of Account
+        smtp.sendmail(sender, receiver, msgRoot.as_string())
+        smtp.quit()
 
     sentcard = crud.create_sentcard(message, date_sent, card, contact)
     db.session.add(sentcard)
     db.session.commit()
-    return redirect(f"/{user_id}")
+    return redirect(f"/outbox/{user_id}")
 
 
 

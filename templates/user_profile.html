@@ -24,10 +24,10 @@
 <p><b>{{card.title}}</b></p>
 <img src="{{ card.url }}" width="100" >
 
-<form action="/publish/{{card.card_id}}" method="POST"><button name="publish" id="publish" type="button" class="btn btn-link">Publish as Template</button></form>
+<form action="/publish/{{card.card_id}}" method="POST"><button name="publish" id="publish" type="submit" class="btn btn-link">Publish as Template</button></form>
 <a href="/sendcard/{{card.card_id}}">Send Card</a>
-<form action="/editcard/{{card.card_id}}"><button type="button" class="btn btn-link" name="edit_card" id="edit_card">Edit</button></form>
-<form action="/hidecard/{{card.card_id}}" method="POST"><button name="hide_card" id="hide_card" type="button" class="btn btn-link">Delete</button></form>
+<form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-link" name="edit_card" id="edit_card">Edit</button></form>
+<form action="/hidecard/{{card.card_id}}" method="POST"><button name="hide_card" id="hide_card" type="submit" class="btn btn-link">Delete</button></form>
 
 </div>
 {% endfor %}

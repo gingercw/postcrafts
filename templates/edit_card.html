@@ -6,20 +6,14 @@
 
 <script src="https://scaleflex.cloudimg.io/v7/plugins/filerobot-image-editor/latest/filerobot-image-editor.min.js"></script>
 
-
-
 {% endblock%}
 {% block body %}
 
 
-  <h1>Create a New Card</h1> 
+  <h1>Edit a Card</h1> 
 
-  <h2>First, find an image. Then, edit your card.</h2>
-  
-  <input type="search" name="photo_query" id="photoQuery" placeholder="Search for photos..."/>
-  <button name="find_photos" id="findPhotos">Find Photos</button>
+  <h2>Edit your card, then save any changes.</h2>
 
-  <div id="photo_choices"></div>
   
   <!-- add image editor File Robot here -->
   
@@ -29,7 +23,7 @@
 
  
   {% block after_body %}
-  <script type="module" src="/static/file_robot_new.js"></script>
+  <script type="module" src="/static/file_robot_edit.js"></script>
 
   {% endblock %}
 {% endblock %}
