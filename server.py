@@ -183,12 +183,7 @@ def save_card():
     db.session.add(card)
     db.session.commit()
     return redirect(f"/{user_id}/")
-
-# @app.route('/templates')
-# def show_templates():
-#     """See all published card templates"""
-#     templates = crud.get_published_templates()
-#     return render_template ("card_templates.html", templates = templates)
+g
 
 @app.route('/templates')
 def search_templates():
@@ -208,17 +203,6 @@ def publish_card(card_id):
     card.published = True
     db.session.commit()
     return redirect("/templates")
-
-# @app.route('/search_templates')
-# def search_templates():
-#     """search templates using keywords"""
-#     keyword = request.form.get("template_search")
-#     if keyword is None:
-#         templates = crud.get_published_templates()
-#     else:
-#         templates = crud.filter_templates(keyword)
-#         print(templates)
-#     return render_template ("card_templates.html", templates = templates)
 
 @app.route('/savetemplate/<card_id>', methods=["POST"])
 def save_template_as_card(card_id):
