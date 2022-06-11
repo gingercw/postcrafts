@@ -40,6 +40,10 @@ def get_published_templates():
     """shows all cards that were published"""
     return Card.query.filter_by(published = True).all()
 
+def filter_templates(term):
+    """return templates with similar keywords"""
+    return db.session.query(Card).filter(db.and_(Card.published == True, Card.title.ilike(f"%{term}%"))).all()
+
 def create_contact(recipient, phone_number, email, hidden, user):
     """Create and return a new contact."""
 

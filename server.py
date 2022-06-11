@@ -184,17 +184,22 @@ def save_card():
     db.session.commit()
     return redirect(f"/{user_id}/")
 
+# @app.route('/templates')
+# def show_templates():
+#     """See all published card templates"""
+#     templates = crud.get_published_templates()
+#     return render_template ("card_templates.html", templates = templates)
+
 @app.route('/templates')
-def show_templates():
-    """See all published card templates"""
-    templates = crud.get_published_templates()
+def search_templates():
+    """search templates using keywords"""
+    keyword = request.args.get("template_search")
+    if keyword is None:
+        templates = crud.get_published_templates()
+    else:
+        templates = crud.filter_templates(keyword)
     return render_template ("card_templates.html", templates = templates)
 
-@app.route('/api/templates')
-def get_templates():
-    """Get all published card templates"""
-    templates = crud.get_published_templates()
-    return jsonify({template.title: template.to_dict() for template in templates})
 
 @app.route('/publish/<card_id>', methods=["POST"])
 def publish_card(card_id):
@@ -204,6 +209,16 @@ def publish_card(card_id):
     db.session.commit()
     return redirect("/templates")
 
+# @app.route('/search_templates')
+# def search_templates():
+#     """search templates using keywords"""
+#     keyword = request.form.get("template_search")
+#     if keyword is None:
+#         templates = crud.get_published_templates()
+#     else:
+#         templates = crud.filter_templates(keyword)
+#         print(templates)
+#     return render_template ("card_templates.html", templates = templates)
 
 @app.route('/savetemplate/<card_id>', methods=["POST"])
 def save_template_as_card(card_id):
@@ -347,10 +362,6 @@ def hide_contact(contact_id):
 
 
 
-@app.route('/images')
-def images():
-    """go to homepage if a user is not already logged in"""
-    return render_template("image_selector.html")
 
 if __name__ == "__main__":
     # DebugToolbarExtension(app)

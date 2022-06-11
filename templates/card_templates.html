@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}Postcrafts{% endblock %}
 {% block head %}
+
 {% endblock%}
 {% block body %}
 <div>
 <h1>All Templates</h1>
-<form >
+<form action="/templates">
   <input type="search" name="template_search" id="templateSearch" placeholder="Find a template..."/>
-  <button name="template_search">Search</button>
+  <button type="submit">Search</button><a href="/templates">Clear search</a>
 </form>
+
+<div id="templates"></div>
 
 {% for template in templates %}
 <form action="/savetemplate/{{template.card_id}}" method="POST">

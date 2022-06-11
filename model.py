@@ -37,13 +37,6 @@ class Card(db.Model):
 
     user = db.relationship("User", backref="cards")
 
-    def to_dict(self):
-        """get dictionary of cards"""
-        return {'card_id': self.card_id,
-                'title': self.title,
-                'url': self.url,
-                'user_id': self.user_id}
-
 
 
     def __repr__(self):
