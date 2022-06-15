@@ -130,3 +130,6 @@ filerobotImageEditor.render({
     filerobotImageEditor.terminate();
   }
 });
+
+
+

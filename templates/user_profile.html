@@ -20,15 +20,36 @@
 <h2>Your Cards</h2>
 
 {% for card in cards %}
-<div>
+<div class="created_cards">
 <p><b>{{card.title}}</b></p>
 <img src="{{ card.url }}" width="100" >
 
-<form action="/publish/{{card.card_id}}" method="POST"><button name="publish" id="publish" type="submit" class="btn btn-link">Publish as Template</button></form>
-<a href="/sendcard/{{card.card_id}}">Send Card</a>
-<form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-link" name="edit_card" id="edit_card">Edit</button></form>
-<form action="/hidecard/{{card.card_id}}" method="POST"><button name="hide_card" id="hide_card" type="submit" class="btn btn-link">Delete</button></form>
+<button name="publish" id="publish" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addKeywords{{card.card_id}}">Publish</button>
+<a class="card_action" href="/sendcard/{{card.card_id}}">Send</a>
+<form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-link">Edit</button></form>
+<form action="/hidecard/{{card.card_id}}" method="POST"><button type="submit" class="btn btn-link">Delete</button></form>
 
+</div>
+
+<div class="modal" id="addKeywords{{card.card_id}}" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Publish {{card.title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="{{ card.url }}" width="100" >
+        <form action="/publish/{{card.card_id}}" method="POST">
+        <p>Add keywords to make this card more searchable.</p>
+        <textarea name="keywords" rows="4" cols="30" maxlength="100"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button name="publish" id="publish" type="submit" class="btn btn-primary">Publish as Template</button></form> 
+      </div>
+    </div>
+  </div>
 </div>
 {% endfor %}
 </div>

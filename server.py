@@ -75,7 +75,6 @@ def edit_card_details(card_id):
        "card_id": card_id,
        "card_url": card_url,
        "user_id": user_id
-
     })
 
 
@@ -104,7 +103,6 @@ def get_user_details(user_id):
     users_cards = crud.get_cards_by_user(user_id)
     cards_sent = crud.get_sent_cards_by_user(user_id)
     contacts = crud.get_contacts_by_user(user_id)
-
 
     return render_template("user_profile.html", user = user_details, cards = users_cards, sent_cards = cards_sent, contacts = contacts)
 
@@ -183,7 +181,7 @@ def save_card():
     db.session.add(card)
     db.session.commit()
     return redirect(f"/{user_id}/")
-g
+
 
 @app.route('/templates')
 def search_templates():
@@ -200,9 +198,17 @@ def search_templates():
 def publish_card(card_id):
     """publish card as template"""
     card = crud.get_card_by_id(card_id)
-    card.published = True
-    db.session.commit()
-    return redirect("/templates")
+    
+    if card.published is True:
+        flash("This card is already a template!")
+        user_id = session.get("user_id")
+        return redirect(f"/{user_id}")
+    else:
+        card.published = True
+        keywords = request.form.get("keywords")
+        card.tags = keywords
+        db.session.commit()
+        return redirect("/templates")
 
 @app.route('/savetemplate/<card_id>', methods=["POST"])
 def save_template_as_card(card_id):

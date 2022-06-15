@@ -34,29 +34,29 @@ def get_card_by_id(card_id):
 
 def get_cards_by_user(user_id):
     """returns all cards from a user"""
-    return Card.query.filter_by(user_id = user_id, hidden = False).all()
+    return Card.query.filter_by(user_id = user_id, hidden = False).order_by(Card.card_id.desc())
 
 def get_published_templates():
     """shows all cards that were published"""
-    return Card.query.filter_by(published = True).all()
+    return Card.query.filter_by(published = True).order_by(Card.card_id.desc())
+
 
 def filter_templates(term):
     """return templates with similar keywords"""
-    return db.session.query(Card).filter(db.and_(Card.published == True, Card.title.ilike(f"%{term}%"))).all()
+    return db.session.query(Card).filter(db.and_(Card.published == True, Card.tags.ilike(f"%{term}%"))).all()
 
 def create_contact(recipient, phone_number, email, hidden, user):
     """Create and return a new contact."""
-
     contact = Contact(recipient=recipient, phone_number=phone_number, email=email, hidden=hidden, user=user)
 
     return contact
 
 def get_contacts_by_user(user_id):
-    """returns all cards from a user"""
-    return Contact.query.filter_by(user_id = user_id, hidden = False).all()
+    """returns all contacts for a user"""
+    return Contact.query.filter_by(user_id = user_id, hidden = False).order_by(Contact.contact_id.desc())
 
 def get_contact_by_id(contact_id):
-    """returns all cards from a user"""
+    """returns a contact through contact id"""
     return Contact.query.get(contact_id)
 
 def create_sentcard(message, date_sent, card, contact):
