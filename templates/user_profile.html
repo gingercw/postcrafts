@@ -3,10 +3,7 @@
 {% block head %}
 {% endblock%}
 {% block body %}
-<div>
-<form action="/logout" >
-  <button>Log out</button>
-</form>
+
 
 <h1>Your Profile</h1>
 <p>Get started by creating a brand new card or pick from one of our templates.</p>
@@ -15,21 +12,23 @@
 <li><a href="/{{user.user_id}}/new_card">Create new card</a></li>
 <li><a href="/templates">Browse templates</a></li>
 </ul>
-</div>
-<div>
+
+
 <h2>Your Cards</h2>
 
 {% for card in cards %}
-<div class="created_cards">
-<p><b>{{card.title}}</b></p>
-<img src="{{ card.url }}" width="100" >
+  <div class="card" style="width: 18rem;">
+    <img class="card-img-top"  src="{{ card.url }}" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-text">{{card.title}}</h5>
+      <button name="publish" id="publish" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addKeywords{{card.card_id}}">Publish</button>
+      <a class="card_action" href="/sendcard/{{card.card_id}}">Send</a>
+      <form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-link">Edit</button></form>
+      <form action="/hidecard/{{card.card_id}}" method="POST"><button type="submit" class="btn btn-link">Delete</button></form>
+      
+    </div>
+  </div>
 
-<button name="publish" id="publish" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addKeywords{{card.card_id}}">Publish</button>
-<a class="card_action" href="/sendcard/{{card.card_id}}">Send</a>
-<form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-link">Edit</button></form>
-<form action="/hidecard/{{card.card_id}}" method="POST"><button type="submit" class="btn btn-link">Delete</button></form>
-
-</div>
 
 <div class="modal" id="addKeywords{{card.card_id}}" tabindex="-1">
   <div class="modal-dialog">
@@ -52,21 +51,6 @@
   </div>
 </div>
 {% endfor %}
-</div>
-<div>
-<h2>Outbox</h2>
-
-<a href="/outbox/{{user.user_id}}">See all your sent cards</a>
-
-</div>
-
-<div>
-<h2>Address Book</h2>
-<a href="/addressbook/{{user.user_id}}">Go to your Address Book</a>
-
-</div>
-
-
 
 
 {% endblock %}

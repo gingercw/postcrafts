@@ -33,7 +33,33 @@
 <textarea name="message" rows="8" cols="45" maxlength="280"></textarea>
 </div>
 
-<button type="submit">Ship it!</button> 
+<button type="submit" class="btn btn-primary">Ship it!</button> 
 </form>
+<button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#schedule">Schedule for Later</button> 
+<div class="modal" id="schedule" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Schedule {{card.title}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <img src="{{ card.url }}" width="100" >
+        <form action="/schedule/{{card.card_id}}" method="POST">
+          <div class="date">
+            <label for="date">Date</label> <input id="date" type="date">
+        </div>
+        <div class="time">
+            <label for="time">Time</label> <input id="time" type="time">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Schedule</button></form> 
+      </div>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}

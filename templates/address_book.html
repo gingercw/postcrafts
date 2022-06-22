@@ -5,26 +5,46 @@
 {% block body %}
 
 <h1>Address Book</h1>
-<a href="/{{user.user_id}}">Go back to your profile</a>
 <p>Add family and friends to your contacts.</p>
-  <form action="/addcontact" method="POST">
-  <label for="name">Name:</label><input type="text" name="name"/>
-  <label for="phone_number">Phone number:</label><input type="tel" id="phone_number" name="phone_number"
-  pattern="[0-9]{10}"
-  required size="20" minlength="10" maxlength="10" placeholder="2223334444">
-  <label for="email">Name:</label><input type="text" name="email" placeholder="name@domain.com"/>
+ 
   
-  <button id="add_contact">Add Contact</button>
-  </form>
+<button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_contact">Create New Contact</button> 
+
   {% for contact in contacts %}
+  <div>
     <form action="/hidecontact/{{contact.contact_id}}" method="POST">
     <p><b>{{ contact.recipient }}</b></p>
     <p>{{contact.phone_number}}</p>
     <p>{{contact.email}}</p>
 
-    <button name="hide_contact">Delete Contact</button>
+    <button class="btn btn-link">Delete</button>
     </form>
+  </div>
   {% endfor %} 
+
+ 
+<div class="modal" id="add_contact" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create New Contact</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/addcontact" method="POST">
+          <div><label for="name">Name:</label><input type="text" name="name"/></div>
+          <div><label for="phone_number">Phone number:</label><input type="tel" id="phone_number" name="phone_number"
+            pattern="[0-9]{10}"
+            required size="20" minlength="10" maxlength="10" placeholder="2223334444"></div>
+          <div><label for="email">Name:</label><input type="text" name="email" placeholder="name@domain.com"/></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Add Contact</button></form> 
+      </div>
+    </div>
+  </div>
+</div>
 
 
 

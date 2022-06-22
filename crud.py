@@ -61,7 +61,6 @@ def get_contact_by_id(contact_id):
 
 def create_sentcard(message, date_sent, card, contact):
     """Record card that was sent."""
-
     sentcard = SentCard(message=message, date_sent=date_sent, card=card, contact=contact)
 
     return sentcard

@@ -11,6 +11,8 @@ from model import connect_to_db, db
 
 from datetime import datetime
 
+import sched, time
+
 import crud 
 
 import smtplib
@@ -53,9 +55,8 @@ def index():
 @app.route('/<user_id>/new_card')
 def make_card(user_id):
     """create a new card"""
-    user_details = crud.get_user_by_id(user_id)
-    
-    return render_template("new_card.html", user_details=user_details)
+    user = crud.get_user_by_id(user_id)
+    return render_template("new_card.html", user=user)
 
 @app.route('/edit_card/<card_id>')
 def edit_card(card_id):
@@ -186,12 +187,14 @@ def save_card():
 @app.route('/templates')
 def search_templates():
     """search templates using keywords"""
+    user_id = session.get("user_id")
+    user = crud.get_user_by_id(user_id)
     keyword = request.args.get("template_search")
     if keyword is None:
         templates = crud.get_published_templates()
     else:
         templates = crud.filter_templates(keyword)
-    return render_template ("card_templates.html", templates = templates)
+    return render_template ("card_templates.html", templates = templates, user = user)
 
 
 @app.route('/publish/<card_id>', methods=["POST"])
@@ -237,18 +240,19 @@ def sendcard(card_id):
     """go to sendcard page"""
     card = crud.get_card_by_id(card_id)
     user_id = card.user_id
+    user = crud.get_user_by_id(user_id)
     contacts = crud.get_contacts_by_user(user_id)
 
-    return render_template("send_card.html", card = card, contacts = contacts)
+    return render_template("send_card.html", card = card, contacts = contacts, 
+    user = user)
+
+
 
 @app.route('/addressbook/<user_id>')
 def show_addresses(user_id):
-    """go to sendcard page"""
-
+    """go to addressbook"""
     contacts = crud.get_contacts_by_user(user_id)
     user = crud.get_user_by_id(user_id)
-
-
     return render_template("address_book.html", user=user, contacts = contacts)
 
 @app.route("/addcontact", methods=["POST"])
@@ -317,7 +321,16 @@ def add_sentcard(card_id):
     db.session.commit()
     return redirect(f"/outbox/{user_id}")
 
-
+# @app.route('/schedule/<card_id>')
+# def schedule_card(card_id):
+#     """schedule card for delivery"""
+#     card = crud.get_card_by_id(card_id)
+#     date = request.args.get("date")
+#     time = request.args.get("time")
+#     s = sched.scheduler(time.time, time.sleep)
+#     s.enterabs(datetime(2018, 1, 1, 12, 20, 59, 0).timestamp(), 1, add_sentcard,argument=)
+#     s.enterabs(datetime(2018, 1, 1, 12, 20, 59, 500000).timestamp(), 1, func)
+#     s.run()
 
 @app.route('/outbox/<user_id>')
 def show_sentcards(user_id):
