@@ -5,29 +5,43 @@
 {% block body %}
 
 
-<h1>Your Profile</h1>
-<p>Get started by creating a brand new card or pick from one of our templates.</p>
 
-<ul>
-<li><a href="/{{user.user_id}}/new_card">Create new card</a></li>
-<li><a href="/templates">Browse templates</a></li>
-</ul>
+  <div class="container text-center">
+    <h1 class="jumbotron-heading">Postcrafts</h1>
+    <p class="lead text-muted">Create a brand new card or pick a template.</p>
+    <p>
+      <a href="/{{user.user_id}}/new_card" class="btn btn-primary my-2">Create Card</a>
+      <a href="/templates" class="btn btn-secondary my-2">Browse Templates</a>
+    </p>
+  </div>
 
 
-<h2>Your Cards</h2>
+
+<h2 class="text-center">Your Cards</h2>
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    
 
 {% for card in cards %}
-  <div class="card" style="width: 18rem;">
+
+<div class="col">
+  <h5 class="card-text text-center">{{card.title}}</h5>
+  <div class="card box-shadow">
+    
     <img class="card-img-top"  src="{{ card.url }}" alt="Card image cap">
     <div class="card-body">
-      <h5 class="card-text">{{card.title}}</h5>
-      <button name="publish" id="publish" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#addKeywords{{card.card_id}}">Publish</button>
-      <a class="card_action" href="/sendcard/{{card.card_id}}">Send</a>
-      <form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-link">Edit</button></form>
-      <form action="/hidecard/{{card.card_id}}" method="POST"><button type="submit" class="btn btn-link">Delete</button></form>
       
+      
+      <div class="btn-group">
+      <button name="publish" id="publish" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addKeywords{{card.card_id}}">Publish</button>
+      <a class="btn btn-sm btn-outline-secondary" href="/sendcard/{{card.card_id}}">Send</a>
+      <form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-sm btn-outline-secondary">Edit</button></form>
+      <form action="/hidecard/{{card.card_id}}" method="POST"><button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button></form>
+      </div>
     </div>
   </div>
+</div>
+ 
 
 
 <div class="modal" id="addKeywords{{card.card_id}}" tabindex="-1">
@@ -35,6 +49,8 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Publish {{card.title}}</h5>
+        
+
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -52,5 +68,6 @@
 </div>
 {% endfor %}
 
-
+</div>
+</div>
 {% endblock %}

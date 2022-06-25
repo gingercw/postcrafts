@@ -63,7 +63,9 @@ def edit_card(card_id):
     """render template for edit card"""
     card = crud.get_card_by_id(card_id)
     card_id = card.card_id
-    return render_template("edit_card.html")
+    user_id = session.get("user_id")
+    user = crud.get_user_by_id(user_id)
+    return render_template("edit_card.html", user=user)
 
 @app.route('/edit_card/details/<card_id>')
 def edit_card_details(card_id):
@@ -320,17 +322,6 @@ def add_sentcard(card_id):
     db.session.add(sentcard)
     db.session.commit()
     return redirect(f"/outbox/{user_id}")
-
-# @app.route('/schedule/<card_id>')
-# def schedule_card(card_id):
-#     """schedule card for delivery"""
-#     card = crud.get_card_by_id(card_id)
-#     date = request.args.get("date")
-#     time = request.args.get("time")
-#     s = sched.scheduler(time.time, time.sleep)
-#     s.enterabs(datetime(2018, 1, 1, 12, 20, 59, 0).timestamp(), 1, add_sentcard,argument=)
-#     s.enterabs(datetime(2018, 1, 1, 12, 20, 59, 500000).timestamp(), 1, func)
-#     s.run()
 
 @app.route('/outbox/<user_id>')
 def show_sentcards(user_id):

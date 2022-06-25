@@ -2,28 +2,29 @@
 {% block title %}Postcrafts{% endblock %}
 {% block navbar %}{% endblock %}
 {% block body %}
-  <h1>Postcrafts</h1>
+<h3>Postcrafts</h3>
+<body class="text-center" style="position: initial; overflow: initial;">
 
-  <p>Create. Send. Celebrate.</p>
+  
+
+  <h1>Create. Send. Celebrate.</h1>
   <p>Let family and friends know you are thinking of them by sending a card.</p>
 
-
-
-  <h2>Log In</h2>
   <form action="/login" method="POST">
     <p>
-      Email <input type="text" name="email">
+      <input type="text" name="email" placeholder="Email" aria-label="Email">
     </p>
 
     <p>
-      Password <input type="password" name="password">
+      <input type="password" name="password" placeholder="Password" aria-label="Password">
     </p>
 
     <p>
-      <input type="submit">
+
+      <button type="submit" class="btn btn-primary">Log In</button>
     </p>
   </form>
-  <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#create_account">Create an Account</button> 
+  <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#create_account">Sign Up</button> 
 
   <div class="modal" id="create_account" tabindex="-1">
     <div class="modal-dialog">
@@ -51,4 +52,5 @@
 </div>
 </div>
 </div>
+</body>
 {% endblock %}
