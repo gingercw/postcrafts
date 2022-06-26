@@ -21,8 +21,13 @@
   {% for contact in contacts %}
     <div class="card" style="width: 18rem;">
       <div class="card-body">
+    <div>
     <form action="/hidecontact/{{contact.contact_id}}" method="POST">
-    <p><b>{{ contact.recipient }}</b><button class="btn btn-link">Remove</button></p>
+      <button class="btn btn-link btn-icon" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#EE3A43" class="bi bi-trash" viewBox="0 0 16 16">
+        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+      </svg></button></form></div>
+    <p class="text-center"><b>{{ contact.recipient }}</b></p>
     <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
     </svg> {{contact.phone_number}}</p>
@@ -31,7 +36,7 @@
     </svg> {{contact.email}}</p>
 
     
-    </form>
+
   </div>
   </div>
   {% endfor %} 
@@ -46,11 +51,11 @@
       </div>
       <div class="modal-body">
         <form action="/addcontact" method="POST">
-          <div><label for="name">Name:</label><input type="text" name="name"/></div>
-          <div><label for="phone_number">Phone number:</label><input type="tel" id="phone_number" name="phone_number"
+          <div><label for="name">Name: </label><input type="text" name="name"/></div>
+          <div><label for="phone_number">Phone number: </label><input type="tel" id="phone_number" name="phone_number"
             pattern="[0-9]{10}"
             required size="20" minlength="10" maxlength="10" placeholder="2223334444"></div>
-          <div><label for="email">Name:</label><input type="text" name="email" placeholder="name@domain.com"/></div>
+          <div><label for="email">Email: </label><input type="text" name="email" placeholder="name@domain.com"/></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

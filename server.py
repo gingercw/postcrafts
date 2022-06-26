@@ -55,8 +55,7 @@ def index():
 @app.route('/<user_id>/new_card')
 def make_card(user_id):
     """create a new card"""
-    user = crud.get_user_by_id(user_id)
-    return render_template("new_card.html", user=user)
+    return render_template("new_card.html", user_id=user_id)
 
 @app.route('/edit_card/<card_id>')
 def edit_card(card_id):
@@ -95,19 +94,19 @@ def save_edits():
     user_id = session.get("user_id")
     print(user_id)
     db.session.commit()
-    return redirect(f"/{user_id}/")
+    return redirect(f"/users/{user_id}/")
 
 
-@app.route('/<user_id>')
-@app.route('/<user_id>/')
+@app.route('/users/<user_id>')
+@app.route('/users/<user_id>/')
 def get_user_details(user_id):
     """show user profile page with created cards"""
-    user_details = crud.get_user_by_id(user_id)
-    users_cards = crud.get_cards_by_user(user_id)
+    user = crud.get_user_by_id(user_id)
+    cards = crud.get_cards_by_user(user_id)
     cards_sent = crud.get_sent_cards_by_user(user_id)
     contacts = crud.get_contacts_by_user(user_id)
 
-    return render_template("user_profile.html", user = user_details, cards = users_cards, sent_cards = cards_sent, contacts = contacts)
+    return render_template("user_profile.html", user = user, user_id=user_id, cards = cards, sent_cards = cards_sent, contacts = contacts)
 
 
 @app.route('/users', methods=["POST"])
@@ -142,7 +141,7 @@ def login():
     elif input_password == user.password:
         user_id = user.user_id
         session["user_id"] = user_id
-        return redirect(f"/{user_id}")
+        return redirect(f"/users/{user_id}")
     else:
         flash("Wrong password")
         return redirect("/")
@@ -183,20 +182,19 @@ def save_card():
     
     db.session.add(card)
     db.session.commit()
-    return redirect(f"/{user_id}/")
+    return redirect(f"/users/{user_id}/")
 
 
 @app.route('/templates')
 def search_templates():
     """search templates using keywords"""
     user_id = session.get("user_id")
-    user = crud.get_user_by_id(user_id)
     keyword = request.args.get("template_search")
     if keyword is None:
         templates = crud.get_published_templates()
     else:
         templates = crud.filter_templates(keyword)
-    return render_template ("card_templates.html", templates = templates, user = user)
+    return render_template ("card_templates.html", templates = templates, user_id = user_id)
 
 
 @app.route('/publish/<card_id>', methods=["POST"])
@@ -207,7 +205,7 @@ def publish_card(card_id):
     if card.published is True:
         flash("This card is already a template!")
         user_id = session.get("user_id")
-        return redirect(f"/{user_id}")
+        return redirect(f"/users/{user_id}")
     else:
         card.published = True
         keywords = request.form.get("keywords")
@@ -231,7 +229,7 @@ def save_template_as_card(card_id):
         
         db.session.add(card)
         db.session.commit()
-        return redirect(f"/{user_id}")
+        return redirect(f"/users/{user_id}")
     else:
         flash(Markup('Log in or create an account to create a card! <a href="/" class="alert-link">Go here.</a>'))
         return redirect("/templates")
@@ -255,7 +253,7 @@ def show_addresses(user_id):
     """go to addressbook"""
     contacts = crud.get_contacts_by_user(user_id)
     user = crud.get_user_by_id(user_id)
-    return render_template("address_book.html", user=user, contacts = contacts)
+    return render_template("address_book.html", user_id=user_id, contacts = contacts)
 
 @app.route("/addcontact", methods=["POST"])
 def add_contact():
@@ -326,13 +324,11 @@ def add_sentcard(card_id):
 @app.route('/outbox/<user_id>')
 def show_sentcards(user_id):
     """go to user's outbox"""
-    user_id = session.get("user_id")
-    user = crud.get_user_by_id(user_id)
     cards_sent = crud.get_sent_cards_by_user(user_id)
     cards = crud.get_cards_by_user(user_id)
     contacts = crud.get_contacts_by_user(user_id)
     
-    return render_template("outbox.html", sent_cards = cards_sent, cards = cards, user=user, contacts=contacts)
+    return render_template("outbox.html", sent_cards = cards_sent, cards = cards, user_id=user_id, contacts=contacts)
 
 @app.route("/hidecard/<card_id>", methods=["POST"])
 def hide_card(card_id):
@@ -342,7 +338,7 @@ def hide_card(card_id):
     db.session.commit()
     user_id = session.get("user_id")
 
-    return redirect(f"/{user_id}")
+    return redirect(f"/users/{user_id}")
 
 @app.route("/hidecontact/<contact_id>", methods=["POST"])
 def hide_contact(contact_id):
