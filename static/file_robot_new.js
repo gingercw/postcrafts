@@ -25,7 +25,7 @@ function chooseImage(evt)
     },
   })
     .then((response) => response.text())
-    .then((responseText) => window.location.href = './');
+    .then((responseText) => window.location.href = `./`);
 
 
 }
@@ -73,16 +73,33 @@ document.querySelector('#findPhotos').addEventListener('click', (evt) => {
   fetch(`/photos?photo_query=${photoQuery}`) 
     .then((response) => response.json())
     .then((results) => {
-
+      document.querySelector('#photo_choices').innerHTML =
+      `<div class="row">
+        <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"  data-interval="1000">
+              <div class="MultiCarousel-inner">
+                  
+              </div>
+              <button class="btn btn-primary leftLst"><</button>
+              <button class="btn btn-primary rightLst">></button>
+        </div>
+      </div>`
+      
       for (const i in results) {
         const imageUrl = results[i].urls.raw + "?q=85fm=jpg&w=1000&fit=max";
         const photoCredit = results[i].user.username;
         const alt_description = results[i].alt_description;
-        document.querySelector('#photo_choices')
-        .insertAdjacentHTML('beforeend', `<div><img width="100" class="choice" alt="${alt_description}" src=${imageUrl}">
-        <p>Credit: ${photoCredit}</p></div>`);
+        document.querySelector('.MultiCarousel-inner')
+        .insertAdjacentHTML('beforeend', 
+        `<div class="item">
+            <div class="pad15">
+            <img width="100" class="choice" alt="${alt_description}" src=${imageUrl}">
+            <p>Credit: ${photoCredit}</p>
+            </div>
+        </div>`
+       );
       }
 
+      
       
 
       const images = document.querySelectorAll(".choice")

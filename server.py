@@ -47,12 +47,12 @@ def index():
     """go to homepage if a user is not already logged in"""
     if "user_id" in session:
         user_id = session.get("user_id")
-        return redirect(f"/{user_id}")
+        return redirect(f"/users/{user_id}")
     else:
         return render_template("index.html")
 
 
-@app.route('/<user_id>/new_card')
+@app.route('/users/<user_id>/new_card')
 def make_card(user_id):
     """create a new card"""
     return render_template("new_card.html", user_id=user_id)
@@ -63,8 +63,7 @@ def edit_card(card_id):
     card = crud.get_card_by_id(card_id)
     card_id = card.card_id
     user_id = session.get("user_id")
-    user = crud.get_user_by_id(user_id)
-    return render_template("edit_card.html", user=user)
+    return render_template("edit_card.html", user_id=user_id)
 
 @app.route('/edit_card/details/<card_id>')
 def edit_card_details(card_id):
@@ -84,15 +83,12 @@ def edit_card_details(card_id):
 def save_edits():
     """update url to card to save changes"""
     card_id = request.json.get("card_id")
-    print(card_id)
     card = crud.get_card_by_id(card_id)
     raw_image = request.json.get("rawImage")
     upload_result = upload(raw_image)
     url, options = cloudinary_url(upload_result['public_id'], format="jpg", crop="fill", width=600, height=400)
     card.url = url
-    print(card.url)
     user_id = session.get("user_id")
-    print(user_id)
     db.session.commit()
     return redirect(f"/users/{user_id}/")
 
@@ -240,11 +236,10 @@ def sendcard(card_id):
     """go to sendcard page"""
     card = crud.get_card_by_id(card_id)
     user_id = card.user_id
-    user = crud.get_user_by_id(user_id)
     contacts = crud.get_contacts_by_user(user_id)
 
     return render_template("send_card.html", card = card, contacts = contacts, 
-    user = user)
+    user_id = user_id)
 
 
 
@@ -252,7 +247,6 @@ def sendcard(card_id):
 def show_addresses(user_id):
     """go to addressbook"""
     contacts = crud.get_contacts_by_user(user_id)
-    user = crud.get_user_by_id(user_id)
     return render_template("address_book.html", user_id=user_id, contacts = contacts)
 
 @app.route("/addcontact", methods=["POST"])

@@ -3,10 +3,18 @@
 {% block head %}
 {% endblock%}
 {% block body %}
+<div class="container text-center">
+  <h1 class="jumbotron-heading">Send Your Card</h1>
+  <p class="lead text-muted">Send this card to a contact in your Address Book.</p>
+</div>
 
-<h1>Send Your Card</h1>
+<div class="container">
 
-<img src="{{ card.url }}" width="100" >
+<div class="row">
+<div class="col">
+<img src="{{ card.url }}" width="300" >
+</div>
+<div class="col">
 <form action="/add_sentcard/{{card.card_id}}" method="POST">
 <div>
   <label for="contact"><h2>1. Pick a Recipient.</h2></label>
@@ -36,5 +44,8 @@
 <button type="submit" class="btn btn-primary">Ship it!</button> 
 </form>
 
+</div>
+</div>
+</div>
 
 {% endblock %}
