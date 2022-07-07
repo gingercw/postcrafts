@@ -4,14 +4,15 @@
 
 {% endblock%}
 {% block body %}
-<div class="container text-center">
+<section class="cap">
+<div class="py-5 container text-center">
 <h1 class="jumbotron-heading">All Templates</h1>
 <form action="/templates">
   <input type="search" name="template_search" id="templateSearch" placeholder="Find a template..."/>
-  <button type="submit">Search</button>
-  <a href="/templates">Clear search</a>
+  <button class="btn btn-primary" type="submit">Search</button>
+  <a href="/templates">Clear</a>
 </form>
-
+</section>
 <div class="container">
 <div class="row row-cols-1 row-cols-md-3 g-4">
 {% for template in templates %}

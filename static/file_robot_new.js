@@ -68,22 +68,14 @@ filerobotImageEditor.render({
 document.querySelector('#findPhotos').addEventListener('click', (evt) => {
   const photoQuery = document.querySelector('#photoQuery').value;
   
-  document.querySelector('#photo_choices').innerHTML = "";
+  document.querySelector('.MultiCarousel-inner').innerHTML = "";
+  
   
   fetch(`/photos?photo_query=${photoQuery}`) 
     .then((response) => response.json())
     .then((results) => {
-      document.querySelector('#photo_choices').innerHTML =
-      `<div class="row">
-        <div class="MultiCarousel" data-items="1,3,5,6" data-slide="1" id="MultiCarousel"  data-interval="1000">
-              <div class="MultiCarousel-inner">
-                  
-              </div>
-              <button class="btn btn-primary leftLst"><</button>
-              <button class="btn btn-primary rightLst">></button>
-        </div>
-      </div>`
-      
+      document.querySelector('#photo_choices').style.display = '';
+
       for (const i in results) {
         const imageUrl = results[i].urls.raw + "?q=85fm=jpg&w=1000&fit=max";
         const photoCredit = results[i].user.username;
@@ -98,6 +90,8 @@ document.querySelector('#findPhotos').addEventListener('click', (evt) => {
         </div>`
        );
       }
+
+      window.ResCarouselSize();
 
       
       

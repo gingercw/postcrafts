@@ -99,10 +99,10 @@ def get_user_details(user_id):
     """show user profile page with created cards"""
     user = crud.get_user_by_id(user_id)
     cards = crud.get_cards_by_user(user_id)
-    cards_sent = crud.get_sent_cards_by_user(user_id)
-    contacts = crud.get_contacts_by_user(user_id)
+    print(cards)
+    print(type(cards))
+    return render_template("user_profile.html", user = user, user_id=user_id, cards = cards)
 
-    return render_template("user_profile.html", user = user, user_id=user_id, cards = cards, sent_cards = cards_sent, contacts = contacts)
 
 
 @app.route('/users', methods=["POST"])
@@ -151,11 +151,11 @@ def logout():
         
 @app.route('/photos')
 def get_photos():
-    """Find 8 photos from Unsplash with query term."""
+    """Find 16 photos from Unsplash with query term."""
     photo_query = request.args.get("photo_query")
     headers_dict = {"Authorization": f"Client-ID {CLIENTID}"}
 
-    url = f'https://api.unsplash.com/photos/random?query={photo_query}&orientation=landscape&count=8'
+    url = f'https://api.unsplash.com/photos/random?query={photo_query}&orientation=landscape&count=16'
 
     response = requests.get(url, headers=headers_dict)
 
@@ -238,8 +238,7 @@ def sendcard(card_id):
     user_id = card.user_id
     contacts = crud.get_contacts_by_user(user_id)
 
-    return render_template("send_card.html", card = card, contacts = contacts, 
-    user_id = user_id)
+    return render_template("send_card.html", card = card, contacts = contacts, user_id = user_id)
 
 
 

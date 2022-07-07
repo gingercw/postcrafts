@@ -34,7 +34,7 @@ def get_card_by_id(card_id):
 
 def get_cards_by_user(user_id):
     """returns all cards from a user"""
-    return Card.query.filter_by(user_id = user_id, hidden = False).order_by(Card.card_id.desc())
+    return Card.query.filter_by(user_id = user_id, hidden = False).order_by(Card.card_id.desc()).all()
 
 def get_published_templates():
     """shows all cards that were published"""

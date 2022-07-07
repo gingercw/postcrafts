@@ -18,16 +18,19 @@
     {% endblock %}
   </head>
   {% block navbar %} 
-  <nav class="navbar navbar-expand-lg bg-light">
+  <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
       <a class="navbar-brand" href="/">Postcrafts</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <ul class="navbar-nav mr-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link" href="/users/{{user_id}}/new_card">New Card</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/templates">Templates</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="/addressbook/{{user_id}}">Address Book</a>
@@ -35,11 +38,14 @@
           <li class="nav-item">
             <a class="nav-link" href="/outbox/{{user_id}}">Outbox</a>
           </li>
+          
+        </ul>
+
+        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
           <form class="d-flex" action="/logout" >
             <button class="btn btn-outline-success me-2 text-end" >Log out</button>
           </form>
         </ul>
-
       </div>
     </div>
   </nav>

@@ -52,8 +52,8 @@ class Contact(db.Model):
                         autoincrement=True,
                         primary_key=True,)
     recipient = db.Column(db.String)
-    phone_number = db.Column(db.String, nullable=True)
-    email = db.Column(db.String, nullable=True)
+    phone_number = db.Column(db.String)
+    email = db.Column(db.String)
     hidden = db.Column(db.Boolean, default=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     

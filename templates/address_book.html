@@ -4,22 +4,23 @@
 {% endblock%}
 {% block body %}
 
-
-<div class="container text-center">
+<section class="cap">
+<div class="py-5 container text-center">
   <h1 class="jumbotron-heading">Address Book</h1>
   <p class="lead text-muted">Add family and friends to your contacts.</p>
   <p>
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_contact">Create New Contact</button> 
   </p>
 </div>
- 
+</section>
   
 <h2 class="text-center">Your Contacts</h2>
 <div class="container">
-  <div class="row">
+  <div class="row row-cols-1 row-cols-md-3 g-4">
 
   {% for contact in contacts %}
-    <div class="card" style="width: 18rem;">
+  <div class="col">  
+  <div class="card" style="width: 18rem;">
       <div class="card-body">
     <div>
     <form action="/hidecontact/{{contact.contact_id}}" method="POST">
@@ -36,7 +37,7 @@
     </svg> {{contact.email}}</p>
 
     
-
+  </div>
   </div>
   </div>
   {% endfor %} 

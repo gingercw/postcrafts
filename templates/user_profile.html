@@ -5,8 +5,8 @@
 {% block body %}
 
 
-
-  <div class="container text-center">
+<section class="cap">
+  <div class="py-5 container text-center ">
     <h1 class="jumbotron-heading">Postcrafts</h1>
     <p class="lead text-muted">Create a brand new card or pick a template.</p>
     <p>
@@ -14,21 +14,24 @@
       <a href="/templates" class="btn btn-secondary my-2">Browse Templates</a>
     </p>
   </div>
-
+</section>
 
 
 <h2 class="text-center">Your Cards</h2>
+
+{% if cards|length == 0 %}
+<p class="text-center">You don't have any cards...yet!  Start by <a href="/users/{{user.user_id}}/new_card">creating a card</a> or <a href="/templates">picking a template</a>.</p>    
+
+{% else %}
 <div class="container">
   <div class="row row-cols-1 row-cols-md-3 g-4">
-    
-
 {% for card in cards %}
 
 <div class="col">
   <h5 class="card-text text-center">{{card.title}}</h5>
   <div class="card box-shadow">
     
-    <img class="card-img-top"  src="{{ card.url }}" alt="Card image cap">
+    <img class="card-img-top"  src="{{ card.url }}">
     <div class="card-body">
       
       
@@ -67,6 +70,7 @@
   </div>
 </div>
 {% endfor %}
+{% endif %}
 
 </div>
 </div>
