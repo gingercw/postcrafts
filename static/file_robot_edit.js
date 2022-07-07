@@ -26,7 +26,7 @@ const handleSave = (editedImageObject, designState) => {
     },
   })
     .then((response) => response.text())
-    .then((responseText) => window.location.href = `./users/${cardInfo.user_id}`);
+    .then((responseText) => window.location.href = `/`);
 
 }
 

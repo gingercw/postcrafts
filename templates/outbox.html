@@ -10,7 +10,11 @@
   <p class="lead text-muted">Take a walk down memory lane with the cards you've sent.</p>
 </div>
 </section>
+<h2 class="text-center">Sent Cards</h2>
+{% if sent_cards|length == 0 %}
+<p class="text-center">Don't be shy! <a href="/templates">Pick a card</a> and send it today.</p> 
 
+{% else %}
 <div class="container">
 <table class="table table-striped mt-3 text-left">
   <thead>
@@ -31,7 +35,7 @@
       <td>{{ sent_card.date_sent }}</td>
   </tr>
   {% endfor %}
-
+{%endif%}
   </tbody>
 </table>
 </div>

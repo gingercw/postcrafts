@@ -53,7 +53,7 @@ def create_contact(recipient, phone_number, email, hidden, user):
 
 def get_contacts_by_user(user_id):
     """returns all contacts for a user"""
-    return Contact.query.filter_by(user_id = user_id, hidden = False).order_by(Contact.contact_id.desc())
+    return Contact.query.filter_by(user_id = user_id, hidden = False).order_by(Contact.contact_id.desc()).all()
 
 def get_contact_by_id(contact_id):
     """returns a contact through contact id"""
@@ -68,7 +68,7 @@ def create_sentcard(message, date_sent, card, contact):
 
 def get_sent_cards_by_user(user_id):
     """returns all sent cards from a user"""
-    return db.session.query(SentCard).join(Card).filter(Card.user_id == user_id).order_by(SentCard.date_sent.desc())
+    return db.session.query(SentCard).join(Card).filter(Card.user_id == user_id).order_by(SentCard.date_sent.desc()).all()
     
 
 if __name__ == '__main__':

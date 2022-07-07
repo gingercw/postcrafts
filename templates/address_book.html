@@ -15,6 +15,10 @@
 </section>
   
 <h2 class="text-center">Your Contacts</h2>
+{% if contacts|length == 0 %}
+<p class="text-center">Populate your contacts list! Add some loved ones to get started.</p>    
+
+{% else %}
 <div class="container">
   <div class="row row-cols-1 row-cols-md-3 g-4">
 
@@ -40,7 +44,8 @@
   </div>
   </div>
   </div>
-  {% endfor %} 
+  {% endfor %}
+  {% endif %} 
 
  
 <div class="modal" id="add_contact" tabindex="-1">

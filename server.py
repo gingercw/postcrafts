@@ -90,7 +90,7 @@ def save_edits():
     card.url = url
     user_id = session.get("user_id")
     db.session.commit()
-    return redirect(f"/users/{user_id}/")
+    return redirect(f"/users/{user_id}")
 
 
 @app.route('/users/<user_id>')
