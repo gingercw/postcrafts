@@ -1,20 +1,31 @@
 {% extends 'base.html' %}
 {% block title %}Postcrafts{% endblock %}
-{% block navbar %}{% endblock %}
-{% block body %}
+{% block navbar %}
+<nav class="navbar navbar-expand-lg">
 
-<div class="container text-center">
-  <h1 class="jumbotron-heading">Postcrafts</h1>
+  <a class="navbar-brand" href="/"><img class="logo-image" src="/static/images/send.png" style="display: inline-block;">
+    <span style="display: inline-block;">Postcrafts</span></a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+        <button class="btn btn-outline-success me-2 text-end" data-bs-toggle="modal" data-bs-target="#create_account">Sign Up</button>
+    </ul>
   </div>
+</div>
+</nav>
+{% endblock %}
+{% block body %}
+<body style="position: initial; overflow: initial;">
 
-
-
-<body class="text-center" style="position: initial; overflow: initial;">
+<div class="bg">
+<div class="container text-center login">
 
   
 
-  <h1>Create. Send. Celebrate.</h1>
-  <p>Let family and friends know you are thinking of them by sending a card.</p>
+  <h2>Create. Send. Celebrate.</h2>
+  <p>Let family and friends know you are thinking of them by sending an e-card.</p>
 
   <form action="/login" method="POST">
     <p>
@@ -30,34 +41,39 @@
       <button type="submit" class="btn btn-primary">Log In</button>
     </p>
   </form>
-  <button class="btn btn-link" data-bs-toggle="modal" data-bs-target="#create_account">Sign Up</button> 
 
-  <div class="modal" id="create_account" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Create an Account</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-  <form action="/users" method="POST">
-    <p>
-      Email <input type="text" name="email">
-    </p>
-
-    <p>
-      Password <input type="password" name="password">
-    </p>
-
-  
-  <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-  <button type="submit" class="btn btn-primary">Create Account</button></div>
-</form> 
 
 </div>
 </div>
+<div class="modal" id="create_account" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create an Account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+        <div class="modal-body text-center">
+          <form action="/users" method="POST">
+            <p>
+              Email <input type="text" name="email">
+            </p>
+
+            <p>
+              Password <input type="password" name="password">
+            </p>
+
+          
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Create Account</button></div>
+          </form> 
+
+      </div>
+  </div>
 </div>
 </div>
 </body>
+
+{% endblock %}
+{% block footer %}
 {% endblock %}

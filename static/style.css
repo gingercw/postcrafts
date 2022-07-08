@@ -1,3 +1,36 @@
+.flash-msg {
+  text-align: center;
+}
+
+.logo-image{
+  width: 46px;
+  height: 46px;
+  overflow: hidden;
+  margin-top: -6px;
+  margin-left: 8px;
+}
+
+body, html {
+  height: 100%;
+}
+
+.bg {
+  /* The image used */
+  background-image: url("https://images.unsplash.com/photo-1526554850534-7c78330d5f90?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80");
+
+  /* Full height */
+  height: 100%;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  
+}
+
+
+
+
 .col {
   flex: 0 0 25%;
   width: 250px;
@@ -9,13 +42,41 @@
   margin-right: -15px;
   margin-left: -15px;
   padding-top: 20px;
+
+}
+
+
+
+.login {
+  text-align: center;
+  vertical-align: middle;
+  left      : 50%;
+  top       : 45%;
+  position  : absolute;
+  transform : translate(-50%, -50%);
 }
 
 .btn-icon {
   float: right;
+  margin-top: -10px;
 }
 
+.edit-btn {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-left: 0;
+}
 
+.delete-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: rgb(215, 30, 30);
+  --bs-btn-hover-border-color: rgb(193, 5, 5);
+  border-left: 0;
+}
 .cover-container {
   max-width: 42em;
 }
@@ -70,6 +131,14 @@
   --bs-btn-hover-border-color: rgb(79 98 230);
 }
 
+.card-body {
+  text-align: center;  
+}
+
+.contact {
+  text-align: left;  
+}
+
 .btn-outline-success {
   --bs-btn-color: #fff;
   --bs-btn-border-color: #fff;
@@ -78,15 +147,18 @@
   --bs-btn-hover-border-color: #fff;
 }
 
+.footer {
+  padding-top: 20px;
+}
+
 #photo_choices {
   max-width:50%;
   min-height: 100px;
-  max-height: 150px;
 }
 
 .MultiCarousel { float: left; overflow: hidden; padding: 15px; width: 100%; position:relative; height:150px;}
     .MultiCarousel .MultiCarousel-inner { transition: 1s ease all; float: left; }
-        .MultiCarousel .MultiCarousel-inner .item { float: left; padding-left: 10px;}
+        .MultiCarousel .MultiCarousel-inner .item { float: left; padding-left: 10px; align-items: center;}
         .MultiCarousel .MultiCarousel-inner .item > div { text-align: center; padding:10px; margin:10px; color:#666; font-size: xx-small; }
     .MultiCarousel .leftLst, .MultiCarousel .rightLst { position:absolute; border-radius:50%;top:calc(50% - 20px); }
     .MultiCarousel .leftLst { left:0; }

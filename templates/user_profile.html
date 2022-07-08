@@ -36,10 +36,11 @@
       
       
       <div class="btn-group">
-      <button name="publish" id="publish" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addKeywords{{card.card_id}}">Publish</button>
-      <a class="btn btn-sm btn-outline-secondary" href="/sendcard/{{card.card_id}}">Send</a>
-      <form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-sm btn-outline-secondary">Edit</button></form>
-      <form action="/hidecard/{{card.card_id}}" method="POST"><button type="submit" class="btn btn-sm btn-outline-secondary">Delete</button></form>
+        <a class="btn btn-sm btn-outline-secondary" href="/sendcard/{{card.card_id}}">Send</a>
+        <button name="publish" id="publish" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addKeywords{{card.card_id}}">Publish</button>
+      
+      <form action="/edit_card/{{card.card_id}}"><button type="submit" class="btn btn-sm btn-outline-secondary edit-btn">Edit</button></form>
+      <form action="/hidecard/{{card.card_id}}" method="POST"><button type="submit" class="btn btn-sm btn-outline-secondary delete-btn">Delete</button></form>
       </div>
     </div>
   </div>

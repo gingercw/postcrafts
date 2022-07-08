@@ -11,7 +11,6 @@ from model import connect_to_db, db
 
 from datetime import datetime
 
-import sched, time
 
 import crud 
 
@@ -99,8 +98,6 @@ def get_user_details(user_id):
     """show user profile page with created cards"""
     user = crud.get_user_by_id(user_id)
     cards = crud.get_cards_by_user(user_id)
-    print(cards)
-    print(type(cards))
     return render_template("user_profile.html", user = user, user_id=user_id, cards = cards)
 
 
