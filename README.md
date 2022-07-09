@@ -69,7 +69,7 @@ The next stage of Postcrafts includes:
 https://github.com/gingercw/postcrafts
 ```
 
-**2. Create and activate a virtual environment inside the directory.
+**2. Create and activate a virtual environment inside the directory.**
 ```
 $ virtualenv env
 $ source env/bin/activate
