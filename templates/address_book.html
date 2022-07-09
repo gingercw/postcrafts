@@ -57,11 +57,11 @@
       </div>
       <div class="modal-body text-center">
         <form action="/addcontact" method="POST">
-          <div><label for="name">Name: </label><input type="text" name="name"/></div>
+          <div><label for="name">Name: </label><input type="text" name="name" placeholder="Jane Doe"/></div>
           <div><label for="phone_number">Phone number: </label><input type="tel" id="phone_number" name="phone_number"
             pattern="[0-9]{10}"
             required size="20" minlength="10" maxlength="10" placeholder="2223334444"></div>
-          <div><label for="email">Email: </label><input type="text" name="email" placeholder="name@domain.com"/></div>
+          <div><label for="email">Email: </label><input type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2, 4}$" required="" placeholder="name@domain.com" minlength="2" /></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
