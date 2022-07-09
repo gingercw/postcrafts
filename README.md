@@ -38,9 +38,9 @@ Users can search and select images for the card's background. They can then add 
 Users can search through published templates and add the ones they like to their card collection.
 
 ### 🎬 Card Actions
-- **Send a Card:** Users can add a personalized message to their card and send it to a contact in their Address Book. The application can send the card by text or email.
-- **Publish Card:** To make the card public, users can publish cards they created as templates for others on the site to use.
-- **Edit Cards:** Users can edit a card they created or a template to customize it.
+- **Send:** Users can add a personalized message to their card and send it to a contact in their Address Book. The application can send the card by text or email.
+- **Publish:** To make the card public, users can publish cards they created as templates for others on the site to use.
+- **Edit:** Users can edit a card they created or a template to customize it.
 - **Delete:** To make room for more cards, users can hit "Delete" to remove cards from their collection. 
 
 ### 📇 Address Book
